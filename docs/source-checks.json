@@ -1,0 +1,503 @@
+{
+  "baseline": "33aac7cace0dc30d95e671df5aaa825e4c2223a1",
+  "normalization": [
+    {
+      "input": "甲\r\r乙\r",
+      "actual": "甲\n乙"
+    },
+    {
+      "input": "A\u0007\u0007B\u0007\u0007",
+      "actual": "A B"
+    },
+    {
+      "input": "正文\t制表\r",
+      "actual": "正文 制表"
+    },
+    {
+      "input": "A\u000bB\r",
+      "actual": "A\nB"
+    },
+    {
+      "input": "正文\rPAGE \\* MERGEFORMAT 1\r末尾",
+      "actual": "正文\n末尾"
+    }
+  ],
+  "fixture_non_bmp": {
+    "input": "A😀Z",
+    "actual": "A😀",
+    "cause": "fixture CP count uses len(text), not UTF-16 code units"
+  },
+  "papx_tail_check": {
+    "file": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/structure-probe/fixtures/empty-multipara-emoji.doc",
+    "tails": [],
+    "note": "Diagnostic only; no production parser or compatibility rule implemented."
+  },
+  "implementation_validation": {
+    "date": "2026-09-15T09:57:51.953861+00:00",
+    "worktree": "/Users/gearup/workspaces/legacy-doc-development/legacy-doc-docx-aligned",
+    "branch": "codex/docx-aligned-text",
+    "base_commit": "33aac7cace0dc30d95e671df5aaa825e4c2223a1",
+    "pytest_summary": "100 passed",
+    "checks": {
+      "pytest": {
+        "command": [
+          "uv",
+          "run",
+          "--no-project",
+          "--with",
+          "pytest",
+          "--python",
+          "/tmp/doc-text-eval-tools/python-libs-venv/bin/python3",
+          "python3",
+          "-m",
+          "pytest",
+          "-q"
+        ],
+        "exit_code": 0,
+        "output": "........................................................................ [ 72%]\n............................                                             [100%]\n100 passed in 0.09s"
+      },
+      "ruff": {
+        "command": [
+          "uv",
+          "run",
+          "--no-project",
+          "--with",
+          "ruff",
+          "--python",
+          "/tmp/doc-text-eval-tools/python-libs-venv/bin/python3",
+          "ruff",
+          "check",
+          "--select",
+          "F",
+          "src",
+          "tests"
+        ],
+        "exit_code": 0,
+        "output": "All checks passed!"
+      },
+      "compileall": {
+        "command": [
+          "uv",
+          "run",
+          "--no-project",
+          "--python",
+          "/tmp/doc-text-eval-tools/python-libs-venv/bin/python3",
+          "python3",
+          "-m",
+          "compileall",
+          "-q",
+          "src",
+          "tests"
+        ],
+        "exit_code": 0,
+        "output": ""
+      },
+      "diff_check": {
+        "command": [
+          "git",
+          "diff",
+          "--check"
+        ],
+        "exit_code": 0,
+        "output": ""
+      },
+      "build": {
+        "command": [
+          "uv",
+          "build",
+          "--out-dir",
+          "/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check"
+        ],
+        "exit_code": 0,
+        "output": "Building source distribution...\nBuilding wheel from source distribution...\nSuccessfully built /Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check/legacy_doc-0.2.1.tar.gz\nSuccessfully built /Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check/legacy_doc-0.2.1-py3-none-any.whl"
+      },
+      "twine": {
+        "command": [
+          "uv",
+          "run",
+          "--no-project",
+          "--with",
+          "twine",
+          "--python",
+          "/tmp/doc-text-eval-tools/python-libs-venv/bin/python3",
+          "python3",
+          "-m",
+          "twine",
+          "check",
+          "/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check/legacy_doc-0.2.1-py3-none-any.whl",
+          "/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check/legacy_doc-0.2.1.tar.gz"
+        ],
+        "exit_code": 0,
+        "output": "Checking \n/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-che\nck/legacy_doc-0.2.1-py3-none-any.whl: PASSED\nChecking \n/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-che\nck/legacy_doc-0.2.1.tar.gz: PASSED"
+      },
+      "wheel_smoke": {
+        "command": [
+          "uv",
+          "run",
+          "--no-project",
+          "--python",
+          "/tmp/doc-text-eval-tools/python-libs-venv/bin/python3",
+          "python3",
+          "-c",
+          "\nimport sys, zipfile\nfrom pathlib import Path\nwheel=Path('/Users/gearup/Documents/Codex/2026-09-15/legacy-doc-development/work/package-check/legacy_doc-0.2.1-py3-none-any.whl')\nrepo=Path('/Users/gearup/workspaces/legacy-doc-development/legacy-doc-docx-aligned')\nwith zipfile.ZipFile(wheel) as archive:\n    for path in (repo/'src/legacy_doc').glob('*.py'):\n        assert archive.read('legacy_doc/'+path.name)==path.read_bytes(), path.name\nsys.path.insert(0,str(wheel))\nimport legacy_doc\nassert str(wheel) in legacy_doc.__file__\nactual=legacy_doc.extract_text((repo/'tests/data/empty-multipara-emoji.doc').read_bytes()).text\nassert actual=='正文含 HEADER_ONLY 相同文字应保留 😀𠀀\\n甲\\t\\t丙\\n\\t第二行\\n单元格第二段\\n\\n正文结尾 BODY_END 😀'\nprint('Packaged source bytes match the worktree; wheel-only extraction passed.')\n"
+        ],
+        "exit_code": 0,
+        "output": "Packaged source bytes match the worktree; wheel-only extraction passed.\nWARN `--no-project` was provided, but no project was found"
+      },
+      "original_worktree_status": {
+        "command": [
+          "git",
+          "status",
+          "--porcelain"
+        ],
+        "exit_code": 0,
+        "output": ""
+      }
+    },
+    "saved_docx_comparisons": [
+      {
+        "name": "simple-table",
+        "source": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/inputs/simple-table.doc",
+        "sha256": "67d7fe8e0555c16516354498a5935f24eeef90beb5efbf526f93a1d6c734da43",
+        "baseline": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/results/lo_docx_platform/simple-table.extracted.txt",
+        "exact": true,
+        "chars": 237,
+        "baseline_chars": 237
+      },
+      {
+        "name": "table-merges",
+        "source": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/inputs/table-merges.doc",
+        "sha256": "bceea684bbf492fae57da88a133c3fd7ea9abd8355a89c6b9f31b9b0e2d68d3e",
+        "baseline": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/results/lo_docx_platform/table-merges.extracted.txt",
+        "exact": true,
+        "chars": 22,
+        "baseline_chars": 22
+      },
+      {
+        "name": "innertable",
+        "source": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/inputs/innertable.doc",
+        "sha256": "5b085e66bad882c3c58ec49d7547b42f75141babd4a5e8efcf634b995e44bb3f",
+        "baseline": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/structure-probe/innertable.docx.txt",
+        "exact": true,
+        "chars": 27,
+        "baseline_chars": 27
+      },
+      {
+        "name": "controlled",
+        "source": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/inputs/controlled.doc",
+        "sha256": "2371b95282200fd2da6a6fc190322060c5b8003d69c9b78273f4dd7065c63663",
+        "baseline": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/results/lo_docx_platform/controlled.extracted.txt",
+        "exact": true,
+        "chars": 169,
+        "baseline_chars": 169
+      },
+      {
+        "name": "testPictures",
+        "source": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/inputs/testPictures.doc",
+        "sha256": "6f5224140f6381e7f7af069badcf8970a01ecb5630a2bbd30f155d164c767f66",
+        "baseline": "/Users/gearup/workspaces/ai交互平台/local-private/doc-text-eval-20260915/structure-probe/testPictures.docx.txt",
+        "exact": false,
+        "chars": 191,
+        "baseline_chars": 182
+      }
+    ],
+    "source_sha256": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "9d9dd7c09e5f0e707651a3e5d1be4fa5a2d495acdb5823381473d1d1d8797a99",
+      "src/legacy_doc/_characters.py": "c874125685919441eb2f7d4139c1a0c51bcc4ca7a9619d6c0473d59e3f1caf7d",
+      "src/legacy_doc/_paragraphs.py": "c1f0b1aef876141e31070280542ad5714049598c76a04876fabbd30d2a7a1940",
+      "src/legacy_doc/_shapes.py": "7fef5eca7bf6db53d824265b366fe95e4180cb5ca8ba86fa1409e6386af8972b",
+      "src/legacy_doc/_text.py": "815555861c5c5100eff6c5a8a120217e87316df0fca71fc7dd66ff74570be352",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "504f597d79735ff66242e11c82144d466816f85219871bad86e045af5a7abe52",
+      "src/legacy_doc/properties.py": "58b79c50a21c7f9e452d6f5a0392c05305f2cdd387c81175b238fe08cae426ea",
+      "src/legacy_doc/types.py": "81276be8492c7ec15097ec4edb85d74a6b0bb9cc6dd578e8cb87ad714daea367",
+      "src/legacy_doc/word.py": "cd8576d04aa0d7c93d959eee28662e4d35f4d62492ee08981d626c8ecff93713"
+    },
+    "build_artifacts": {
+      "legacy_doc-0.2.1-py3-none-any.whl": "50b2bbbdcb08d1d3361791a38f9bd7c9351da5d57d6e7ed4ff2a5f82918b8eb1",
+      "legacy_doc-0.2.1.tar.gz": "f2be0e58d917203ad80aca92301230c10e64013fe2ad2e114f518ca0a4d984f3"
+    },
+    "limitations": [
+      "No independent Word/WPS body-textbox positive fixture",
+      "Selected OfficeArt geometry text fails explicitly",
+      "Unresolved style-dependent CFSpec fails explicitly",
+      "No universal DOC/DOCX visual-equivalence guarantee",
+      "Linked textbox break tables must cover the complete selected range and anchor chain"
+    ],
+    "cross_review": {
+      "text_renderer": "No new reproducible findings in bounded independent review; final row whitespace/output-limit fix confirmed.",
+      "character_index": "No reproducible findings in bounded independent CHPX/CFSpec review; 10 character tests passed."
+    },
+    "package_cleanup": "Rebuilt after removing transient uv.lock; source archive excludes it and wheel source bytes match the final worktree."
+  },
+  "borrowed_fixture_validation": {
+    "date": "2026-09-15T10:28:47.227269+00:00",
+    "worktree": "/Users/gearup/workspaces/legacy-doc-development/legacy-doc-docx-aligned",
+    "fixture_count": 10,
+    "fixture_bytes": 305152,
+    "categories": [
+      "body",
+      "body-scope",
+      "empty-body",
+      "tables",
+      "body-textboxes",
+      "unsupported-format"
+    ],
+    "cases": [
+      {
+        "id": "body-paragraphs",
+        "category": "body",
+        "file": "apache-poi/test2.doc",
+        "sha256": "773a1db3c6cba870ccad43a4149c6446554a8ef54e6210d6d6987500d1d95ec3",
+        "size": 19968,
+        "blob_sha": "06921df39545bd0544f062a88c4532632cbea80e",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/test2.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java",
+        "upstream_test_name": "testExtractFromParagraphs / p_text1",
+        "upstream_condition": "Fourteen stored paragraphs, including blank paragraphs and differently formatted text.",
+        "our_condition": "Keep all paragraph text and internal blank lines; use LF and trim the final boundary.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "body-unicode",
+        "category": "body-scope",
+        "file": "apache-poi/HeaderFooterUnicode.doc",
+        "sha256": "8bd7fc9552bccb7b71a0dc34ffd801e7d3547d1317fd75d0c35fca3572f6fa4b",
+        "size": 28672,
+        "blob_sha": "1b517f6a2e08e4584351708a950ea1234bed7b50",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/HeaderFooterUnicode.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java",
+        "upstream_test_name": "testWithHeader / testWithFooter",
+        "upstream_condition": "Header and footer text contain Unicode and are included by the upstream full-text extractor.",
+        "our_condition": "Exclude those header/footer strings while retaining body currency symbols, accents and the final paragraph.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "body-notes",
+        "category": "body-scope",
+        "file": "apache-poi/footnote.doc",
+        "sha256": "81a18ac63010789ca08c28de107658a308c758a3cfc667a6edf11ffe888d3e13",
+        "size": 9728,
+        "blob_sha": "5e11a4437f6af06600bd01f1d597e636999ee9e2",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/footnote.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java",
+        "upstream_test_name": "testFootnote / testEndnote / testComments",
+        "upstream_condition": "Separate stories contain TestFootnote, TestEndnote and TestComment.",
+        "our_condition": "Extract exactly the main-story text Test text; exclude all three independent stories.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "empty-body",
+        "category": "empty-body",
+        "file": "apache-poi/empty.doc",
+        "sha256": "5f421a3970c70f12296073478380c0849a54c03fb2f4842392c7d3c5039bf1eb",
+        "size": 19456,
+        "blob_sha": "ceb841ce68e4bc0d4961cdad97a467e84bfb8165",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/empty.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java",
+        "upstream_test_name": "testBug51834 (Bug 51671 input)",
+        "upstream_condition": "Reading and writing an empty document must not crash.",
+        "our_condition": "Reading returns an empty string, zero text length and no warnings; writing is outside scope.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "table-nested",
+        "category": "tables",
+        "file": "apache-poi/innertable.doc",
+        "sha256": "5b085e66bad882c3c58ec49d7547b42f75141babd4a5e8efcf634b995e44bb3f",
+        "size": 11776,
+        "blob_sha": "e437a5fd162ecc42a0326575d7232121421bdcce",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/innertable.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestTableRow.java",
+        "upstream_test_name": "testInnerTableCellsDetection / testOuterTableCellsDetection",
+        "upstream_condition": "Outer table has three rows of three cells; inner table has two rows of two cells.",
+        "our_condition": "Keep the outer cell separators; flatten the inner table paragraphs as 1, 2, 3, 4 separated by LF.",
+        "expectation_basis": "Stored fixture text and the agreed extraction contract; table text additionally checked against the previously saved paired DOCX baseline.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "table-merges",
+        "category": "tables",
+        "file": "apache-poi/table-merges.doc",
+        "sha256": "bceea684bbf492fae57da88a133c3fd7ea9abd8355a89c6b9f31b9b0e2d68d3e",
+        "size": 11264,
+        "blob_sha": "77822acd1633822446804e6a5bbb589b57200dd3",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/table-merges.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToHtmlConverter.java",
+        "upstream_test_name": "testFile table-merges.doc case",
+        "upstream_condition": "HTML output has cells spanning three columns and two columns.",
+        "our_condition": "Use the agreed logical-cell text sequence and separators; do not assert HTML colspan or reconstruct a visual grid.",
+        "expectation_basis": "Stored fixture text and the agreed extraction contract; table text additionally checked against the previously saved paired DOCX baseline.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "table-simple",
+        "category": "tables",
+        "file": "apache-poi/simple-table.doc",
+        "sha256": "67d7fe8e0555c16516354498a5935f24eeef90beb5efbf526f93a1d6c734da43",
+        "size": 19456,
+        "blob_sha": "6453e45b4cb425bffef7a48f8bf961a1379924d2",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/simple-table.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": null,
+        "upstream_test_name": "Sample content describes a 2-row, 3-column table",
+        "upstream_condition": "The fixture itself contains introductory text, a 2x3 labelled table and closing text.",
+        "our_condition": "Preserve surrounding paragraphs and all six cells; TAB between cells and LF between rows.",
+        "expectation_basis": "Stored fixture text and the agreed extraction contract; table text additionally checked against the previously saved paired DOCX baseline.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "unsupported-word95",
+        "category": "unsupported-format",
+        "file": "apache-poi/Word95.doc",
+        "sha256": "a7b9557e917daf29cfee6baaa90226fbfa7900ffa05cc35bdc03aafdefef5789",
+        "size": 102400,
+        "blob_sha": "a214f292585a7f1c7a8358627186df8b77af0eb8",
+        "source": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/test-data/document/Word95.doc",
+        "source_commit": "dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860",
+        "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java",
+        "upstream_test_name": "testWord95_WordExtractor",
+        "upstream_condition": "The normal WordExtractor rejects Word 95; upstream provides a separate old-format reader.",
+        "our_condition": "Raise LegacyDocError; this minimal reader does not add Word 6/95 support.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Upstream Apache LICENSE and NOTICE retained. Fixture bytes are unchanged; no fixture-specific notice was found."
+      },
+      {
+        "id": "textbox-transparent",
+        "category": "body-textboxes",
+        "file": "libreoffice/tdf112618_textbox_no_bg.doc",
+        "sha256": "2d0ea8b1dd2aa35b1e2fa1336e22945edf158dabedc84b5c27429b386ab2f435",
+        "size": 27136,
+        "blob_sha": "c7d9823b0db9708b114abb94221fdf4a5bc11c97",
+        "source": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/data/tdf112618_textbox_no_bg.doc",
+        "source_commit": "23efc7f91ea1af24dafdbd1ca7d8b121cee96fec",
+        "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export3.cxx",
+        "upstream_test_name": "testTdf112618_textbox_no_bg",
+        "upstream_condition": "Shape 2 has 100% transparent fill; upstream does not assert text.",
+        "our_condition": "Keep the literal body-textbox text Testing. This is our new text condition, not an upstream text assertion.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Local regression fixture from LibreOffice. Upstream test source is MPL-2.0; no separate license notice for this binary was found. Not relabeled as MIT."
+      },
+      {
+        "id": "textbox-fills",
+        "category": "body-textboxes",
+        "file": "libreoffice/tdf101826_xattrTextBoxFill.doc",
+        "sha256": "cab742e55b62e7a638ada283e877144a574e0412032ac5d797c1eb8cfedcfb9a",
+        "size": 55296,
+        "blob_sha": "206f4830958aac1e3fa429b74edd4697d5876f13",
+        "source": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/data/tdf101826_xattrTextBoxFill.doc",
+        "source_commit": "23efc7f91ea1af24dafdbd1ca7d8b121cee96fec",
+        "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export3.cxx",
+        "upstream_test_name": "testTdf101826_xattrTextBoxFill",
+        "upstream_condition": "Check gradient, bitmap and repeated-pattern fill properties; upstream does not assert text.",
+        "our_condition": "Extract each of the six literal textbox labels exactly once regardless of fill style, with no extra non-whitespace text.",
+        "expectation_basis": "Upstream conditions adapted to our scope and literal fixture content.",
+        "licensing": "Local regression fixture from LibreOffice. Upstream test source is MPL-2.0; no separate license notice for this binary was found. Not relabeled as MIT."
+      }
+    ],
+    "initial_reproduction": "Two LibreOffice textbox fixtures failed with PlcfSpaMom CP exceeds main-document limit. Three new terminal-CP acceptance tests failed before the fix; the three used-range rejection tests passed.",
+    "fix": "Ignore undefined SPA terminal CP and the end of unused terminal FTXBXS/Tbkd ranges; preserve actual range bounds and strict PLC ordering.",
+    "checks": {
+      "pytest": {
+        "command": "uv run --no-project --with pytest --python /tmp/doc-text-eval-tools/python-libs-venv/bin/python3 python3 -m pytest -q",
+        "exit_code": 0,
+        "output": "116 passed in 0.11s"
+      },
+      "ruff": {
+        "command": "uv run --no-project --with ruff --python /tmp/doc-text-eval-tools/python-libs-venv/bin/python3 ruff check --select F src tests",
+        "exit_code": 0,
+        "output": "All checks passed!"
+      },
+      "diff_check": {
+        "command": "git diff --check",
+        "exit_code": 0
+      }
+    },
+    "source_hashes": {
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "tests/test_shapes.py": "ee9881fe0ffb3a93c6b8036bfd96706d0d353e6dd132f90a99753fd635a52f3b",
+      "tests/test_real_documents.py": "ef0a8e90bc645dd9db417c738863482c70f900393a3ff0f80f159eccefc14fcb",
+      "tests/data/upstream/cases.json": "06b6dcc790f912d635407ae7bd5b8ed32933b57eb9d1d511590dca0ef8b266a0"
+    },
+    "publication": "Local use only; no commit, push, PR or release.",
+    "build_note": "Previous implementation_validation build results predate this patch; no new distribution build requested.",
+    "review": {
+      "scope": "_parse_spa, _parse_txbx, _parse_txbx_bkd and the six new terminal/actual-CP tests",
+      "result": "No reproducible issue found. Actual anchor/range bounds and strict PLC ordering remain enforced.",
+      "limitation": "This review did not cover other parser modules or rerun the full suite."
+    }
+  },
+  "independent_project_validation": {
+    "date": "2026-09-15T11:04:28.209660+00:00",
+    "project": "/Users/gearup/workspaces/legacy-doc-development/doc-text",
+    "branch": "main",
+    "distribution": "doc-text",
+    "version": "0.1.0",
+    "python_import": "legacy_doc",
+    "runtime_dependencies": [],
+    "migration": {
+      "files_verified_by_sha256": 48,
+      "old_worktree_removed": true,
+      "independent_git_directory": true,
+      "remotes": []
+    },
+    "corpus": {
+      "files": 200,
+      "unique_sha256": 200,
+      "bytes": 23630630,
+      "outcomes": {
+        "extracted": 148,
+        "unsupported-word-version": 23,
+        "rejected-needs-review": 19,
+        "resource-limit": 5,
+        "unsupported-encryption": 3,
+        "unsupported-feature": 1,
+        "unsupported-container": 1
+      },
+      "seconds": 3.648,
+      "manifest": "tests/data/corpus.json",
+      "report": "docs/corpus-results.json",
+      "classification_evidence": {
+        "filename-only": 136,
+        "confirmed": 49,
+        "uncertain": 5,
+        "curated": 10
+      }
+    },
+    "checks": {
+      "pytest": "139 passed in 0.29s",
+      "ruff": "All checks passed!",
+      "wheel": "doc_text-0.1.0-py3-none-any.whl built successfully",
+      "version_sync": "0.1.0"
+    },
+    "source_hashes": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "5f51dc149e0613af790f3a90e7daefe2f42072f78091defd1ac44b24bf5c638f",
+      "src/legacy_doc/_characters.py": "c874125685919441eb2f7d4139c1a0c51bcc4ca7a9619d6c0473d59e3f1caf7d",
+      "src/legacy_doc/_paragraphs.py": "c1f0b1aef876141e31070280542ad5714049598c76a04876fabbd30d2a7a1940",
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "src/legacy_doc/_text.py": "815555861c5c5100eff6c5a8a120217e87316df0fca71fc7dd66ff74570be352",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "79ad89e74295ad861b212c8eff9a65658a6150e95e8005cdf5e2fff07bf24be0",
+      "src/legacy_doc/properties.py": "2860d440a1dbda1890ecd82bbf6d5328c76c633342c848f432b32470bfb8349d",
+      "src/legacy_doc/types.py": "ed5b835ba95b968e8a6379026f3619f8ff9123c0edfd28193da5e9875f71a87a",
+      "src/legacy_doc/word.py": "cd8576d04aa0d7c93d959eee28662e4d35f4d62492ee08981d626c8ecff93713"
+    },
+    "remaining": "19 structural rejections require review; successful extraction is not a per-file exact-text guarantee."
+  }
+}

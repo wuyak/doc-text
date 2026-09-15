@@ -1,0 +1,113 @@
+{
+  "source": "/Users/gearup/workspaces/ai交互平台/Interactive-platform/backend/open_webui/retrieval/loaders/text_only.py",
+  "repository_commit": "8c7d209bc03bf55103b1428f177e75f663185af2",
+  "source_sha256": "9371200050f25ba201cd1f5efd6bb78f5209822660ac0a2e2d251e1555d13e55",
+  "method": "Exact AST-selected source functions, standard-library-only isolated execution; synthetic XML ZIPs, not Word-validity fixtures or DOC conversion tests.",
+  "cases": [
+    {
+      "name": "paragraph_whitespace",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t xml:space=\"preserve\">  A  B  </w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">C</w:t></w:r></w:p></w:body></w:document>",
+      "expected": "A  B\n\nC",
+      "actual": "A  B\n\nC",
+      "passed": true
+    },
+    {
+      "name": "inline_tab_breaks",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t>A</w:t><w:tab/><w:t>B</w:t><w:br w:type=\"page\"/><w:t>C</w:t><w:cr/><w:t>D</w:t></w:r></w:p></w:body></w:document>",
+      "expected": "A\tB\nC\nD",
+      "actual": "A\tB\nC\nD",
+      "passed": true
+    },
+    {
+      "name": "empty_cells",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">B</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">D</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "\tB\t\tD",
+      "actual": "\tB\t\tD",
+      "passed": true
+    },
+    {
+      "name": "cell_empty_paragraphs",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\">A</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">B</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">C</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "A\nB\tC",
+      "actual": "A\nB\tC",
+      "passed": true
+    },
+    {
+      "name": "nested_table",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\">前</w:t></w:r></w:p><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\">甲</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">乙</w:t></w:r></w:p></w:tc></w:tr></w:tbl><w:p><w:r><w:t xml:space=\"preserve\">后</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">右</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "前\n甲\n乙\n后\t右",
+      "actual": "前\n甲\n乙\n后\t右",
+      "passed": true
+    },
+    {
+      "name": "grid_span",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:tcPr><w:gridSpan w:val=\"2\"/></w:tcPr><w:p><w:r><w:t xml:space=\"preserve\">A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">B</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "A\tB",
+      "actual": "A\tB",
+      "passed": true
+    },
+    {
+      "name": "vertical_merge",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:tcPr><w:vMerge w:val=\"restart\"/></w:tcPr><w:p><w:r><w:t xml:space=\"preserve\">A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">B</w:t></w:r></w:p></w:tc></w:tr><w:tr><w:tc><w:tcPr><w:vMerge/></w:tcPr><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">C</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "A\tB\n\tC",
+      "actual": "A\tB\n\tC",
+      "passed": true
+    },
+    {
+      "name": "field_and_deleted",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:instrText xml:space=\"preserve\"> PAGE </w:instrText><w:t>3</w:t></w:r><w:del><w:r><w:delText>旧</w:delText></w:r></w:del><w:ins><w:r><w:t>新</w:t></w:r></w:ins></w:p></w:body></w:document>",
+      "expected": "PAGE 3旧新",
+      "actual": "PAGE 3旧新",
+      "passed": true
+    },
+    {
+      "name": "textbox_in_body_paragraph",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t>前</w:t></w:r><w:r><w:pict><v:shape><v:textbox><w:txbxContent><w:p><w:r><w:t xml:space=\"preserve\">框一</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">框二</w:t></w:r></w:p></w:txbxContent></v:textbox></v:shape></w:pict></w:r><w:r><w:t>后</w:t></w:r></w:p></w:body></w:document>",
+      "expected": "前框一框二后",
+      "actual": "前框一框二后",
+      "passed": true
+    },
+    {
+      "name": "textbox_in_cell",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:tbl><w:tr><w:tc><w:p><w:r><w:t>前</w:t></w:r><w:r><w:pict><v:shape><v:textbox><w:txbxContent><w:p><w:r><w:t xml:space=\"preserve\">框一</w:t></w:r></w:p><w:p><w:r><w:t xml:space=\"preserve\">框二</w:t></w:r></w:p></w:txbxContent></v:textbox></v:shape></w:pict></w:r><w:r><w:t>后</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:body></w:document>",
+      "expected": "前框一框二后\n框一\n框二",
+      "actual": "前框一框二后\n框一\n框二",
+      "passed": true
+    },
+    {
+      "name": "wrapper_table",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:sdt><w:sdtContent><w:tbl><w:tr><w:tc><w:p><w:r><w:t xml:space=\"preserve\">A</w:t></w:r></w:p></w:tc><w:tc><w:p><w:r><w:t xml:space=\"preserve\">B</w:t></w:r></w:p></w:tc></w:tr></w:tbl></w:sdtContent></w:sdt></w:body></w:document>",
+      "expected": "A\nB",
+      "actual": "A\nB",
+      "passed": true
+    },
+    {
+      "name": "private_unicode",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t xml:space=\"preserve\">A﻿B</w:t></w:r></w:p></w:body></w:document>",
+      "expected": "A﻿B",
+      "actual": "A﻿B",
+      "passed": true
+    },
+    {
+      "name": "wordart_representations",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><a:t>节点字</a:t><v:textpath string=\"属性字\"/></w:p></w:body></w:document>",
+      "expected": "节点字",
+      "actual": "节点字",
+      "passed": true
+    },
+    {
+      "name": "independent_parts",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t xml:space=\"preserve\">正文</w:t></w:r></w:p></w:body></w:document>",
+      "expected": "正文",
+      "actual": "正文",
+      "passed": true
+    },
+    {
+      "name": "empty_document",
+      "document_xml": "<w:document xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:a=\"http://schemas.openxmlformats.org/drawingml/2006/main\"><w:body><w:p><w:r><w:t xml:space=\"preserve\"></w:t></w:r></w:p></w:body></w:document>",
+      "expected": "",
+      "actual": "",
+      "passed": true
+    }
+  ]
+}

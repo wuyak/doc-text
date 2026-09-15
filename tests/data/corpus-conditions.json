@@ -1,0 +1,444 @@
+{
+  "corpus/apache-poi/Fuzzed.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5418937293340672.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4947285593948160.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5440721166139392.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5050208641482752.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-6610789829836800.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5832867957309440.doc": {
+    "category": "malformed-input",
+    "category_basis": "Pinned POI TestWordToConverterSuite.failingFiles lists this file under its explicit '// Corrupt files' block; the suite excludes it without asserting a rejection outcome.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L45-L66",
+    "upstream_test_name": "TestWordToConverterSuite.failingFiles",
+    "source_condition": "The upstream converter suite excludes the file from its broad conversion sweep as a corrupt input."
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-POIHWPFFuzzer-5696094627495936.doc": {
+    "category": "malformed-input",
+    "category_basis": "The pinned POI corpus filename identifies a ClusterFuzz testcase, but no reviewed pinned HWPF test names this file; the local parser result is not treated as proof of corruption or rejection.",
+    "classification_status": "uncertain",
+    "upstream_test": null,
+    "upstream_test_name": null,
+    "source_condition": null
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4892412469968896.doc": {
+    "category": "malformed-input",
+    "category_basis": "The pinned POI corpus filename identifies a ClusterFuzz testcase, but no reviewed pinned HWPF test names this file; the local parser result is not treated as proof of corruption or rejection.",
+    "classification_status": "uncertain",
+    "upstream_test": null,
+    "upstream_test_name": null,
+    "source_condition": null
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4951943183990784.doc": {
+    "category": "malformed-input",
+    "category_basis": "The pinned POI corpus filename identifies a ClusterFuzz testcase, but no reviewed pinned HWPF test names this file; the local parser result is not treated as proof of corruption or rejection.",
+    "classification_status": "uncertain",
+    "upstream_test": null,
+    "upstream_test_name": null,
+    "source_condition": null
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5074346559012864.doc": {
+    "category": "malformed-input",
+    "category_basis": "The pinned POI corpus filename identifies a ClusterFuzz testcase, but no reviewed pinned HWPF test names this file; the local parser result is not treated as proof of corruption or rejection.",
+    "classification_status": "uncertain",
+    "upstream_test": null,
+    "upstream_test_name": null,
+    "source_condition": null
+  },
+  "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5195207308541952.doc": {
+    "category": "malformed-input",
+    "category_basis": "The pinned POI corpus filename identifies a ClusterFuzz testcase, but no reviewed pinned HWPF test names this file; the local parser result is not treated as proof of corruption or rejection.",
+    "classification_status": "uncertain",
+    "upstream_test": null,
+    "upstream_test_name": null,
+    "source_condition": null
+  },
+  "corpus/apache-poi/Bug50936_1.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.test50936 is an anti-crash picture-table regression; the test opens each file and checks the picture table, without expecting rejection.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L453-L461",
+    "upstream_test_name": "test50936",
+    "source_condition": "Bug 50936 is described as an exception while parsing an MS Word 8.0 file; each named fixture is opened and its picture table is checked."
+  },
+  "corpus/apache-poi/Bug50936_2.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.test50936 is an anti-crash picture-table regression; the test opens each file and checks the picture table, without expecting rejection.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L453-L461",
+    "upstream_test_name": "test50936",
+    "source_condition": "Bug 50936 is described as an exception while parsing an MS Word 8.0 file; each named fixture is opened and its picture table is checked."
+  },
+  "corpus/apache-poi/Bug50936_3.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.test50936 is an anti-crash picture-table regression; the test opens each file and checks the picture table, without expecting rejection.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L453-L461",
+    "upstream_test_name": "test50936",
+    "source_condition": "Bug 50936 is described as an exception while parsing an MS Word 8.0 file; each named fixture is opened and its picture table is checked."
+  },
+  "corpus/apache-poi/Bug50955.doc": {
+    "category": "encoding",
+    "category_basis": "Pinned POI TestHWPFOldDocument checks the old Word code page and Cyrillic text; the test expects successful reading.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L179-L191",
+    "upstream_test_name": "testCodePageBug50955",
+    "source_condition": "The source comment identifies Windows-1251; the test reads Cyrillic text with Word6Extractor and does not expect rejection."
+  },
+  "corpus/apache-poi/Bug51944.doc": {
+    "category": "encoding",
+    "category_basis": "Pinned POI old-document tests check the old font table, Big5 names and extracted text; the test expects successful reading.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L211-L245",
+    "upstream_test_name": "testOldFontTableEncoding / test51944",
+    "source_condition": "The fixture is opened with HWPFOldDocument and checked for old font names and the text 'Post and Fax'; no rejection is expected."
+  },
+  "corpus/apache-poi/Bug53380_1.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 uses these fixtures for the documented Word 97 ArrayIndexOutOfBounds regression and asserts that parsing/text conversion completes.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L597-L625",
+    "upstream_test_name": "testBug51834 (Bug 53380 inputs)",
+    "source_condition": "The source comment says 'ArrayIndexOutOfBounds Exception parsing word 97 document'; the parameterized test opens each file and checks non-null text, with no rejection assertion."
+  },
+  "corpus/apache-poi/Bug53380_2.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 uses these fixtures for the documented Word 97 ArrayIndexOutOfBounds regression and asserts that parsing/text conversion completes.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L597-L625",
+    "upstream_test_name": "testBug51834 (Bug 53380 inputs)",
+    "source_condition": "The source comment says 'ArrayIndexOutOfBounds Exception parsing word 97 document'; the parameterized test opens each file and checks non-null text, with no rejection assertion."
+  },
+  "corpus/apache-poi/Bug53380_3.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 uses these fixtures for the documented Word 97 ArrayIndexOutOfBounds regression and asserts that parsing/text conversion completes.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L597-L625",
+    "upstream_test_name": "testBug51834 (Bug 53380 inputs)",
+    "source_condition": "The source comment says 'ArrayIndexOutOfBounds Exception parsing word 97 document'; the parameterized test opens each file and checks non-null text, with no rejection assertion."
+  },
+  "corpus/apache-poi/Bug53380_4.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 uses these fixtures for the documented Word 97 ArrayIndexOutOfBounds regression and asserts that parsing/text conversion completes.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L597-L625",
+    "upstream_test_name": "testBug51834 (Bug 53380 inputs)",
+    "source_condition": "The source comment says 'ArrayIndexOutOfBounds Exception parsing word 97 document'; the parameterized test opens each file and checks non-null text, with no rejection assertion."
+  },
+  "corpus/apache-poi/Bug61268.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 uses this fixture for the documented Word 97 NegativeArraySizeException regression and does not expect rejection.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L597-L625",
+    "upstream_test_name": "testBug51834 (Bug 61268 input)",
+    "source_condition": "The source comment says 'NegativeArraySizeException parsing word 97 document'; the test opens the file and checks text, with write/readback disabled for this case."
+  },
+  "corpus/apache-poi/Bug33519.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI tests exercise successful reading and expected Cyrillic converter text for this fixture; the filename is not treated as a rejection signal.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L615-L619",
+    "upstream_test_name": "testBug51834 (Bug 33519 input) / TestWordToHtmlConverter CSV",
+    "source_condition": "The upstream comment says 'HWPF fails to read a file', while the current regression test reads it and the HTML converter checks two Cyrillic strings; no rejection assertion is present."
+  },
+  "corpus/apache-poi/Bug47731.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI TestBugs and TestWordToTextConverter assert successful body text extraction for this website-copy regression.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToTextConverter.java#L61-L71",
+    "upstream_test_name": "testBug47731",
+    "source_condition": "The source test opens the fixture and asserts the sentence 'Soak the rice in water for three to four hours'."
+  },
+  "corpus/apache-poi/Bug48075.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI extractor/converter tests assert successful body text extraction, including the first-paragraph and Russian text regressions.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java#L329-L337",
+    "upstream_test_name": "testFirstParagraphFix / TestWordToHtmlConverter CSV",
+    "source_condition": "The source checks the first paragraph and the HTML converter checks 'Приложение №2'; no rejection assertion is present."
+  },
+  "corpus/apache-poi/Bug49933.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI TestBugs.test49933 opens the old-format fixture and asserts extracted body text.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L444-L449",
+    "upstream_test_name": "test49933",
+    "source_condition": "The source uses HWPFOldDocument/Word6Extractor and checks for 'best.wine.jump.ru'; it expects successful reading."
+  },
+  "corpus/apache-poi/Bug51890.doc": {
+    "category": "pictures",
+    "category_basis": "Pinned POI TestBugs.testBug51890 checks the fixture's picture sequence, types and offsets.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L564-L584",
+    "upstream_test_name": "testBug51890",
+    "source_condition": "The source iterates all pictures and compares each expected PictureType and offset; no rejection assertion is present."
+  },
+  "corpus/apache-poi/53446.doc": {
+    "category": "pictures",
+    "category_basis": "Pinned POI TestHWPFPictures.testMacImages checks four extracted pictures and their dimensions.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/TestHWPFPictures.java#L114-L137",
+    "upstream_test_name": "testMacImages",
+    "source_condition": "The source opens the fixture and expects four pictures; the local rejection is not evidence that the source treats it as corrupt."
+  },
+  "corpus/apache-poi/57843.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.test57843 opens this fixture with the old reader and checks successful conversion.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L736-L745",
+    "upstream_test_name": "test57843",
+    "source_condition": "The source opens the old document and checks a non-null converter result; no rejection assertion is present."
+  },
+  "corpus/apache-poi/Bug60936.doc": {
+    "category": "encoding",
+    "category_basis": "Pinned POI old-document tests check code-page or old-font-table decoding for this fixture; they expect successful reading.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L165-L231",
+    "upstream_test_name": "testDefaultCodePageEncoding / testCodePageBug60936 / testOldFontTableAltName",
+    "source_condition": "The source checks Windows-1250/1251 text or old font-table names and does not assert rejection."
+  },
+  "corpus/apache-poi/Bug60942.doc": {
+    "category": "encoding",
+    "category_basis": "Pinned POI old-document tests check code-page or old-font-table decoding for this fixture; they expect successful reading.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L165-L231",
+    "upstream_test_name": "testDefaultCodePageEncoding / testCodePageBug60936 / testOldFontTableAltName",
+    "source_condition": "The source checks Windows-1250/1251 text or old font-table names and does not assert rejection."
+  },
+  "corpus/apache-poi/Bug60942b.doc": {
+    "category": "encoding",
+    "category_basis": "Pinned POI old-document tests check code-page or old-font-table decoding for this fixture; they expect successful reading.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L165-L231",
+    "upstream_test_name": "testDefaultCodePageEncoding / testCodePageBug60936 / testOldFontTableAltName",
+    "source_condition": "The source checks Windows-1250/1251 text or old font-table names and does not assert rejection."
+  },
+  "corpus/apache-poi/Word6_sections.doc": {
+    "category": "unsupported-format",
+    "category_basis": "Pinned POI TestHWPFOldDocument explicitly opens these old Word 6 fixtures with the special old-format reader and checks their section structure.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L127-L163",
+    "upstream_test_name": "testWord6Sections / testWord6Sections2",
+    "source_condition": "The source uses HWPFOldDocument and asserts section/paragraph counts; these fixtures are accepted by that special reader, so no rejection expectation is added."
+  },
+  "corpus/apache-poi/Word6_sections2.doc": {
+    "category": "unsupported-format",
+    "category_basis": "Pinned POI TestHWPFOldDocument explicitly opens these old Word 6 fixtures with the special old-format reader and checks their section structure.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L127-L163",
+    "upstream_test_name": "testWord6Sections / testWord6Sections2",
+    "source_condition": "The source uses HWPFOldDocument and asserts section/paragraph counts; these fixtures are accepted by that special reader, so no rejection expectation is added."
+  },
+  "corpus/apache-poi/word2.doc": {
+    "category": "unsupported-format",
+    "category_basis": "Pinned POI TestHWPFOldDocument explicitly asserts that both the default and old readers reject this Word 2.0 fixture.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestHWPFOldDocument.java#L65-L78",
+    "upstream_test_name": "testWord2hwpf / testWord2hwpfOld",
+    "source_condition": "The source comments 'Can't open as HWPFDocument' and asserts IllegalArgumentException/RuntimeException for the two readers.",
+    "expected_outcome": "reject"
+  },
+  "corpus/apache-poi/Word6.doc": {
+    "category": "unsupported-format",
+    "category_basis": "Pinned POI extractor and old-document tests explicitly reject this file in the default reader while accepting it through the special Word6 reader.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java#L297-L315",
+    "upstream_test_name": "testWord6_WordExtractor",
+    "source_condition": "The source comments 'Too old for the default' and asserts OldWordFileFormatException; the separate Word6Extractor test succeeds.",
+    "expected_outcome": "reject"
+  },
+  "corpus/apache-poi/o_kurs.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI picture and HTML converter tests open this fixture and check successful processing/page-number text.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestPictures.java#L151-L157",
+    "upstream_test_name": "testFastSaved / TestWordToHtmlConverter CSV",
+    "source_condition": "The source includes the file in a fast-saved no-exception picture test and checks 'Все страницы нумеруются' in HTML."
+  },
+  "corpus/apache-poi/test-fields.doc": {
+    "category": "fields",
+    "category_basis": "Pinned POI TestFieldsTables is explicitly based on this fixture and checks its field-table entries.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/TestFieldsTables.java#L31-L75",
+    "upstream_test_name": "TestFieldsTables.testReadFields",
+    "source_condition": "The source names test-fields.doc as the field-table test fixture and asserts the expected field types/marks."
+  },
+  "corpus/apache-poi/test.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI TestWordExtractor checks the paragraph count and a literal paragraph from this fixture.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/extractor/TestWordExtractor.java#L96-L100",
+    "upstream_test_name": "testExtractFromParagraphs",
+    "source_condition": "The source expects 24 paragraph strings and 'as d\\r\\n' at index 16; no rejection assertion is present."
+  },
+  "corpus/apache-poi/testCroppedPictures.doc": {
+    "category": "pictures",
+    "category_basis": "Pinned POI TestPictures.testCroppedPictures checks two extracted pictures from this fixture.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestPictures.java#L312-L323",
+    "upstream_test_name": "testCroppedPictures",
+    "source_condition": "The source opens the fixture and expects two pictures; no rejection assertion is present."
+  },
+  "corpus/apache-poi/word_with_embeded.doc": {
+    "category": "pictures",
+    "category_basis": "Pinned POI TestPictures checks the embedded-document icons and associated picture/text handling for this fixture.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestPictures.java#L168-L190",
+    "upstream_test_name": "testEmbededDocumentIcon",
+    "source_condition": "The source documents two embedded Excel files plus embedded PowerPoint and Word files and checks loading; no rejection assertion is present."
+  },
+  "corpus/apache-poi/Bug45877.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestProblems.testParagraphPAPXNoParent45877 checks that the problematic PAPX parses and retains paragraph text.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestProblems.java#L261-L280",
+    "upstream_test_name": "testParagraphPAPXNoParent45877",
+    "source_condition": "The source labels this a problematic PAPX with no parent and asserts paragraph counts/text; it does not expect rejection."
+  },
+  "corpus/apache-poi/Bug44431.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.test44431 exercises read/write preservation of fields, headers/footers and page text.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L158-L207",
+    "upstream_test_name": "test44431",
+    "source_condition": "The source opens, writes and reopens the fixture and checks fields plus 'Page 3 of 3'; no rejection assertion is present."
+  },
+  "corpus/apache-poi/Bug45269.doc": {
+    "category": "body",
+    "category_basis": "Pinned POI TestProblems exercises text replacement and subsequent paragraph reads for this fixture.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestProblems.java#L207-L243",
+    "upstream_test_name": "testReadParagraphsAfterReplaceText",
+    "source_condition": "The source replaces text with shorter/longer values and reads paragraphs; it expects successful editing."
+  },
+  "corpus/apache-poi/Bug46817.doc": {
+    "category": "tables",
+    "category_basis": "Pinned POI range and HTML converter tests assert that table-cell text and table markup survive extraction.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToHtmlConverter.java#L45-L60",
+    "upstream_test_name": "TestWordToHtmlConverter CSV / TestRange.testBug46817",
+    "source_condition": "The source expects a table element and named Polish cell text; no rejection assertion is present."
+  },
+  "corpus/apache-poi/GaiaTest.doc": {
+    "category": "pictures",
+    "category_basis": "Pinned POI TestHWPFPictures.testEscherDrawing checks one extracted Escher picture and its content.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/TestHWPFPictures.java#L142-L157",
+    "upstream_test_name": "testEscherDrawing",
+    "source_condition": "The source opens the fixture and expects one picture matching GaiaTestImg.png; no rejection assertion is present."
+  },
+  "corpus/apache-poi/ProblemExtracting.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestWordExtractorBugs includes this fixture in a parameterized extraction regression, while the broad converter suite excludes it as a failing file.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/converter/TestWordToConverterSuite.java#L42-L48",
+    "upstream_test_name": "TestWordExtractorBugs parameterized extraction / failingFiles",
+    "source_condition": "The source names the file as a converter-suite failure but does not assert that it is corrupt or must be rejected."
+  },
+  "corpus/apache-poi/testRangeDelete.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI range tests use these fixtures for Unicode delete/insert/replace operations.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestRangeDelete.java#L45-L55",
+    "upstream_test_name": "TestRangeDelete / TestRangeInsertion / TestRangeReplacement",
+    "source_condition": "The source comments explicitly describe Unicode range editing and opens each illustrative fixture; no rejection assertion is present."
+  },
+  "corpus/apache-poi/testRangeInsertion.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI range tests use these fixtures for Unicode delete/insert/replace operations.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestRangeDelete.java#L45-L55",
+    "upstream_test_name": "TestRangeDelete / TestRangeInsertion / TestRangeReplacement",
+    "source_condition": "The source comments explicitly describe Unicode range editing and opens each illustrative fixture; no rejection assertion is present."
+  },
+  "corpus/apache-poi/testRangeReplacement.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI range tests use these fixtures for Unicode delete/insert/replace operations.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestRangeDelete.java#L45-L55",
+    "upstream_test_name": "TestRangeDelete / TestRangeInsertion / TestRangeReplacement",
+    "source_condition": "The source comments explicitly describe Unicode range editing and opens each illustrative fixture; no rejection assertion is present."
+  },
+  "corpus/apache-poi/cap.stanford.edu_profiles_viewbiosketch_facultyid=4009&name=m_maciver.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned POI TestBugs.testBug51834 includes this named document in the regression parameter set and checks successful text conversion.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/apache/poi/blob/dca7cda1dc8a64197f7e7e8e7892ba9a0d79c860/poi-scratchpad/src/test/java/org/apache/poi/hwpf/usermodel/TestBugs.java#L613-L617",
+    "upstream_test_name": "testBug51834 (regression input)",
+    "source_condition": "The source labels this entry as a regression test and asserts text conversion/readback; no rejection assertion is present."
+  },
+  "corpus/libreoffice/fdo53985.doc": {
+    "category": "tables",
+    "category_basis": "Pinned LibreOffice testFdo53985 checks imported table count, form protection and text sections.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export3.cxx#L369-L381",
+    "upstream_test_name": "testFdo53985",
+    "source_condition": "The source expects five tables (only four imported), protected form state and five text sections; the local parser rejection is not an upstream rejection condition."
+  },
+  "corpus/libreoffice/n652364.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned LibreOffice testN652364 checks column-break/page-style conversion.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export.cxx#L139-L174",
+    "upstream_test_name": "testN652364",
+    "source_condition": "The source checks that a column break with columns remains a column break and verifies page styles; no rejection assertion is present."
+  },
+  "corpus/libreoffice/n750255.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned LibreOffice testN750255 checks column-break/page-break conversion and page styles.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export.cxx#L102-L137",
+    "upstream_test_name": "testN750255",
+    "source_condition": "The source says a column break without columns becomes a page break and checks page 2/3 styles; no rejection assertion is present."
+  },
+  "corpus/libreoffice/n757118.doc": {
+    "category": "general-regression",
+    "category_basis": "Pinned LibreOffice testN757118 checks horizontal-rule geometry after import.",
+    "classification_status": "confirmed",
+    "upstream_test": "https://github.com/LibreOffice/core/blob/23efc7f91ea1af24dafdbd1ca7d8b121cee96fec/sw/qa/extras/ww8export/ww8export.cxx#L176-L195",
+    "upstream_test_name": "testN757118",
+    "source_condition": "The source checks two pairs of same-width horizontal rules and their bounds; no rejection assertion is present."
+  }
+}
