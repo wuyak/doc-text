@@ -45,6 +45,8 @@ print(result.metadata)
 inventory fields. When present in the document's saved Word metadata, it can
 also include values such as title, author, company, page count, word count,
 character count, creation time, and last-saved time.
+Only returned properties and their codepage are decoded. Unreturned property
+values are skipped; their index bounds are still checked.
 
 ## API
 
@@ -84,7 +86,11 @@ or heuristic CLX-scanning modes.
 - Extract main-body paragraphs and tables. Do not append independent headers,
   footers, footnotes, endnotes, comments, or header textboxes.
 - Read supported body textboxes through their drawing anchors and text ranges.
-- Preserve saved field instructions and results, revision-deleted text, hidden
+- Replace indexed EMBED fields with an inline `[嵌入文件：name/type]` or
+  `[嵌入文件]` placeholder. Attachment payloads are not parsed and these
+  placeholders do not add warnings. Naming limits are documented in
+  [the development plan](docs/development-plan.md#81-主文档数据选择与嵌入文件占位).
+- Preserve other saved field instructions and results, revision-deleted text, hidden
   text, consecutive spaces, and Unicode private-use characters. The extractor
   does not calculate fields or apply revision visibility.
 - Separate paragraphs and table rows with LF and cells with TAB. Keep empty

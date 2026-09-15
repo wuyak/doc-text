@@ -202,8 +202,8 @@ class _FakeDocument:
 
 def test_variable_sprm_lengths_preserve_following_opcode() -> None:
     # One deleted and one added tab stop: the extended form's remainder is
-    # 1 + 8 + 1 + 5 = 15 bytes, followed by a normal paragraph SPRM.
-    body = bytes([1]) + struct.pack("<ii", 10, 20) + bytes([1]) + struct.pack("<iB", 30, 2)
+    # 1 + 4 + 1 + 3 = 9 bytes, followed by a normal paragraph SPRM.
+    body = bytes([1]) + struct.pack("<hh", 10, 20) + bytes([1]) + struct.pack("<hB", 30, 2)
     grpprl = struct.pack("<H", 0xC615) + bytes([0xFF]) + body
     grpprl += _encode_sprm(SPRM_PF_IN_TABLE, 1)
     parsed = parse_sprms(grpprl)
@@ -255,7 +255,7 @@ def test_prm0_and_prm1_apply_after_papx_and_without_a_papx() -> None:
     assert result[0].in_table and result[0].depth == 1 and result[0].cell_end
 
 
-def test_tdef_and_merge_sprms_project_the_row_cell_flags() -> None:
+def test_horizontal_merge_survives_a_vertical_merge_modifier() -> None:
     cell_group = (
         _encode_sprm(SPRM_PF_IN_TABLE, 1)
         + _encode_sprm(SPRM_P_ITAP, 1)
@@ -269,9 +269,17 @@ def test_tdef_and_merge_sprms_project_the_row_cell_flags() -> None:
     assert records[-1].row_end
     assert records[-1].cells == (
         CellFormat(horizontal_merge=2),
-        CellFormat(horizontal_merge=1, vertical_merge=2),
+        CellFormat(horizontal_merge=1),
         CellFormat(),
     )
+
+
+@pytest.mark.parametrize("operand", [bytes([3, 2]), bytes([1, 4])])
+def test_unused_vertical_merge_state_does_not_skip_record_validation(operand: bytes) -> None:
+    group = _tdef([0, 0, 0]) + _encode_sprm(SPRM_T_VERT_MERGE, operand)
+    doc = _FakeDocument("A\r", {1: group})
+    with pytest.raises(LegacyDocError, match="TVertMerge"):
+        list(iter_paragraphs(doc, 0, doc.cp_limit))
 
 
 @pytest.mark.parametrize("indirect_opcode", [SPRM_P_HUGE_PAPX, SPRM_P_TABLE_PROPS])

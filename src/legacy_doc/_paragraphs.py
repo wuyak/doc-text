@@ -28,17 +28,16 @@ from legacy_doc.exceptions import LegacyDocError
 
 @dataclass(frozen=True)
 class CellFormat:
-    """The merge flags from one ``TC80.tcgrf`` record.
+    """The horizontal merge state needed for logical text cells.
 
     ``horizontal_merge`` is the two-bit ``TCGRF.horzMerge`` value.  Values 2
     and 3 both mean that this cell starts a horizontal merge according to
     MS-DOC; preserving the value is useful because it is what was stored in
-    the file.  ``vertical_merge`` is the raw two-bit ``TCGRF.vertMerge`` /
-    ``VerticalMergeFlag`` value (0, 1, 2, or 3).
+    the file. Vertical continuations keep their stored physical cells, so
+    their merge state does not participate in text projection.
     """
 
     horizontal_merge: int = 0
-    vertical_merge: int = 0
 
 
 @dataclass(frozen=True)
@@ -198,7 +197,9 @@ def _pchg_tabs_operand_len(data: bytes, offset: int) -> int:
     ``cb=255`` is the extended form.  Its actual length is derived from the
     two record counts; treating it as the ordinary one-byte length is the
     classic failure mode that causes the next SPRM to be read in the middle of
-    a tab operation.
+    a tab operation.  Each deleted tab contributes two 16-bit XAS values
+    (four bytes), and each added tab contributes one 16-bit XAS plus one TBD
+    byte (three bytes).  The two cTabs bytes are part of the operand too.
     """
 
     if offset >= len(data):
@@ -212,20 +213,21 @@ def _pchg_tabs_operand_len(data: bytes, offset: int) -> int:
     del_count = data[del_count_offset]
     if del_count > 64:
         _raise("Legacy .doc PChgTabs operand has too many deletions")
-    # PChgTabsDelClose stores both the deleted position and its close
-    # position, each as a four-byte signed integer.
-    add_count_offset = del_count_offset + 1 + 8 * del_count
+    # PChgTabsDelClose stores rgdxaDel and rgdxaClose as arrays of 16-bit
+    # values.  A deleted tab therefore occupies four bytes in total.
+    add_count_offset = del_count_offset + 1 + 4 * del_count
     if add_count_offset >= len(data):
         _raise("Legacy .doc PChgTabs operand is truncated")
     add_count = data[add_count_offset]
     if add_count > 64:
         _raise("Legacy .doc PChgTabs operand has too many additions")
-    # Each added tab carries a four-byte position and one-byte descriptor.
-    remainder_end = add_count_offset + 1 + 5 * add_count
-    # ``remainder_len`` includes the two count bytes, but excludes cb.
-    remainder_len = remainder_end - del_count_offset
+    # PChgTabsAdd stores rgdxaAdd as 16-bit values and each TBD as one byte.
+    remainder_len = 2 + 4 * del_count + 3 * add_count
     if cb != 0xFF and cb != remainder_len:
         _raise("Legacy .doc PChgTabs operand length does not match its records")
+    operand_end = offset + 1 + remainder_len
+    if operand_end > len(data):
+        _raise("Legacy .doc PChgTabs operand is truncated")
     return remainder_len + 1
 
 
@@ -360,10 +362,7 @@ def _parse_tdef_table(operand: bytes) -> list[CellFormat]:
     cells = [CellFormat() for _ in range(column_count)]
     for index in range(tc_count):
         tcgrf = _u16(operand, centers_end + index * 20)
-        cells[index] = CellFormat(
-            horizontal_merge=tcgrf & 0x03,
-            vertical_merge=(tcgrf >> 5) & 0x03,
-        )
+        cells[index] = CellFormat(horizontal_merge=tcgrf & 0x03)
     # TC80 records beyond NumberOfColumns are ignored by MS-DOC, but their
     # bytes must still have been a complete sequence (checked above).
     return cells
@@ -416,36 +415,22 @@ def _apply_row_sprm(state: _ParagraphProperties, item: _Sprm) -> bool:
         first, limit = _itc_first_lim(operand, cells)
         if opcode == SPRM_T_SPLIT:
             for index in range(first, limit):
-                cells[index] = CellFormat(
-                    horizontal_merge=0,
-                    vertical_merge=cells[index].vertical_merge,
-                )
+                cells[index] = CellFormat(horizontal_merge=0)
         elif limit - first >= 2:
             # TCGRF permits both 2 and 3 for a merge-start cell.  A direct
             # TMerge has no extra bit to preserve, so use the canonical 2.
-            cells[first] = CellFormat(
-                horizontal_merge=2,
-                vertical_merge=cells[first].vertical_merge,
-            )
+            cells[first] = CellFormat(horizontal_merge=2)
             for index in range(first + 1, limit):
-                cells[index] = CellFormat(
-                    horizontal_merge=1,
-                    vertical_merge=cells[index].vertical_merge,
-                )
+                cells[index] = CellFormat(horizontal_merge=1)
         return True
     if opcode == SPRM_T_VERT_MERGE:
         if len(operand) != 3 or operand[0] != 2:
             _raise("Legacy .doc TVertMerge operand is invalid")
-        if cells is None:
-            state.cells = []
-            cells = state.cells
         index, flags = operand[1], operand[2]
-        if index >= len(cells) or flags > 3:
+        if cells is None or index >= len(cells) or flags > 3:
             _raise("Legacy .doc TVertMerge cell is outside the row")
-        cells[index] = CellFormat(
-            horizontal_merge=cells[index].horizontal_merge,
-            vertical_merge=flags,
-        )
+        # Validate the selected record, but do not retain an unused visual
+        # merge state or change the text stored in its physical cell.
         return True
     return False
 
@@ -915,6 +900,8 @@ def iter_paragraphs(doc: BinaryDocument, start: int, end: int) -> Iterator[Parag
         # TTP marker, which is structural evidence rather than a literal
         # 0x07 guess.
         in_table = bool(props.in_table or props.depth > 0 or props.ttp or props.inner_ttp)
+        if is_cell_mark and not in_table:
+            _raise("Legacy .doc cell mark has no table membership")
         depth = props.depth
         if in_table and depth == 0:
             depth = 1

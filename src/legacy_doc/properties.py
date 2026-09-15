@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import struct
 from datetime import datetime, timedelta, timezone
-from typing import Any
 
 from legacy_doc.exceptions import LegacyDocError
 
@@ -107,18 +106,12 @@ def _parse_property_section(
         if isinstance(codepage_property, int):
             codepage = codepage_property
 
-    properties: dict[int, Any] = {}
-    for property_id, absolute_offset in property_offsets.items():
-        properties[property_id] = _parse_typed_property(
-            data,
-            absolute_offset,
-            section_end,
-            codepage,
-        )
-
     result: dict[str, object] = {}
     for property_id, name in property_names.items():
-        value = properties.get(property_id)
+        absolute_offset = property_offsets.get(property_id)
+        if absolute_offset is None:
+            continue
+        value = _parse_typed_property(data, absolute_offset, section_end, codepage)
         if value not in {None, ""}:
             result[name] = value
     return result

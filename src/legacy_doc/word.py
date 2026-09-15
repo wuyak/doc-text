@@ -39,10 +39,6 @@ def extract_word_document(
     return WordExtraction(text=text, metadata=metadata, warnings=tuple(warnings))
 
 
-def extract_word_text(document_bytes: bytes, *, options: ExtractionOptions) -> str:
-    return extract_word_document(document_bytes, options=options).text
-
-
 def _extract_metadata(ole: OleReader) -> tuple[dict[str, object], list[str]]:
     stream_names = ole.list_streams()
     folded_stream_names = {name.casefold() for name in stream_names}
@@ -52,7 +48,8 @@ def _extract_metadata(ole: OleReader) -> tuple[dict[str, object], list[str]]:
             DOCUMENT_SUMMARY_INFORMATION_STREAM
         ),
         "has_macros": _has_macros(folded_stream_names),
-        "has_embedded_objects": _has_embedded_objects(folded_stream_names),
+        "has_embedded_objects": (ole.find_storage(("ObjectPool",)) is not None
+                                 or _has_embedded_objects(folded_stream_names)),
         "ole_stream_count": len(stream_names),
     }
     warnings: list[str] = []

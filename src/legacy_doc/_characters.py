@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from bisect import bisect_right
+from dataclasses import dataclass
 import struct
 from typing import TYPE_CHECKING
 
@@ -12,6 +13,14 @@ if TYPE_CHECKING:
     from legacy_doc._binary import BinaryDocument
 
 
+@dataclass(frozen=True)
+class CharacterProperties:
+    special: bool | None = False
+    ole: bool = False
+    object: bool = False
+    location: int | None = None
+
+
 class CharacterIndex:
     """Lazy CHPX access; hidden/revision/font properties do not filter text."""
 
@@ -20,7 +29,7 @@ class CharacterIndex:
         self._boundaries: tuple[int, ...] | None = None
         self._pages: tuple[int, ...] = ()
         self._cache: dict[int, tuple[bytes, tuple[int, ...]]] = {}
-        self._values: dict[tuple[tuple[int, int], int], bool] = {}
+        self._values: dict[tuple[tuple[int, int], int], CharacterProperties] = {}
 
     def _load_index(self) -> None:
         offset, size = self.doc.fib.pair(12)  # PlcBteChpx
@@ -79,7 +88,7 @@ class CharacterIndex:
             raise LegacyDocError('CHPX properties extend beyond FKP')
         return (number, run), page[offset + 1:offset + 1 + size]
 
-    def is_special(self, cp: int) -> bool:
+    def properties(self, cp: int) -> CharacterProperties:
         piece = self.doc.piece_at(cp)
         run, grpprl = self._grpprl(self.doc.fc_for_cp(cp))
         key = (run, piece.prm)
@@ -91,6 +100,8 @@ class CharacterIndex:
         elif (piece.prm >> 1) & 0x7F == 0x75:  # Prm0 -> sprmCFSpec
             groups.append(b'\x55\x08' + bytes([piece.prm >> 8]))
         special: bool | None = False
+        ole = embedded = False
+        location = None
         for group in groups:
             for item in parse_sprms(group):
                 if item.opcode == 0x0855:  # sprmCFSpec
@@ -101,7 +112,22 @@ class CharacterIndex:
                         special = None
                     else:
                         raise LegacyDocError('Invalid sprmCFSpec operand')
+                elif item.opcode in (0x080A, 0x0856):  # CFOle2 / CFObj (Bool8)
+                    value = item.operand[0]
+                    if value not in (0, 1):
+                        raise LegacyDocError('Invalid OLE character Bool8 operand')
+                    if item.opcode == 0x080A:
+                        ole = bool(value)
+                    else:
+                        embedded = bool(value)
+                elif item.opcode == 0x6A03:  # CPicLocation is signed, not a CP
+                    location = struct.unpack('<i', item.operand)[0]
+        result = CharacterProperties(special, ole, embedded, location)
+        self._values[key] = result
+        return result
+
+    def is_special(self, cp: int) -> bool:
+        special = self.properties(cp).special
         if special is None:
             raise LegacyDocError('Unsupported style-dependent sprmCFSpec value')
-        self._values[key] = special
         return special

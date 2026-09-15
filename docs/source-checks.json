@@ -499,5 +499,1077 @@
       "src/legacy_doc/word.py": "cd8576d04aa0d7c93d959eee28662e4d35f4d62492ee08981d626c8ecff93713"
     },
     "remaining": "19 structural rejections require review; successful extraction is not a per-file exact-text guarantee."
+  },
+  "nested_table_start_validation": {
+    "date": "2026-09-15",
+    "status": "implemented",
+    "scope": "MS-DOC CellN may start with TableN+1; root-stream selection, embedded-file placeholders, CFB length and PChgTabs changes remain pending.",
+    "spec": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/5b45f0e7-7760-4fdb-af88-0146de2feb4c",
+    "pytest": {
+      "passed": 151,
+      "new_cases": 12,
+      "command": "uv run --no-project --with pytest --python /tmp/doc-text-eval-tools/python-libs-venv/bin/python3 python3 -m pytest -q"
+    },
+    "ruff_F": "passed",
+    "ablation": {
+      "baseline": {
+        "valid": {
+          "status": "returned",
+          "text": "甲\n乙\n中\n尾\t右\n结束"
+        },
+        "missing_outer_row": {
+          "status": "rejected",
+          "error": "DOC table ended before a cell or row terminator"
+        },
+        "wrong_cell_count": {
+          "status": "rejected",
+          "error": "DOC table definition does not match cell boundaries"
+        }
+      },
+      "restore_sequential_depth_assumption": {
+        "status": "rejected",
+        "error": "Invalid jump in DOC table nesting"
+      },
+      "remove_closure_validation": {
+        "status": "returned",
+        "text": "结束"
+      },
+      "remove_definition_count_validation": {
+        "status": "returned",
+        "text": "甲\n中\n尾\t右\n结束"
+      }
+    },
+    "real_document_assertions": {
+      "fdo53985.doc": "full exact output",
+      "Bug51890.doc": "ten ordered unique text spans, five INCLUDEPICTURE fields, no TAB from inner columns; not a full-text oracle"
+    },
+    "corpus": {
+      "outcomes": {
+        "extracted": 150,
+        "unsupported-word-version": 23,
+        "rejected-needs-review": 17,
+        "resource-limit": 5,
+        "unsupported-encryption": 3,
+        "unsupported-feature": 1,
+        "unsupported-container": 1
+      },
+      "changed_outcomes": [
+        "corpus/apache-poi/Bug51890.doc",
+        "corpus/libreoffice/fdo53985.doc"
+      ],
+      "previously_extracted_text_hashes_unchanged": 148,
+      "runner_exit_code": 1,
+      "exit_reason": "17 rejected files still require review"
+    }
+  },
+  "compatibility_123_validation": {
+    "date": "2026-09-15",
+    "status": "implemented",
+    "scope": "Root-scoped CFB stream selection and body embedded-field placeholders; CFB v3/v4 lengths; PChgTabs widths.",
+    "pytest": {
+      "passed": 222,
+      "command": "uv run --no-project --with pytest --python /tmp/doc-text-eval-tools/python-libs-venv/bin/python3 python3 -m pytest -q"
+    },
+    "ruff_F": "passed",
+    "specs": [
+      "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/b37413bb-f3ef-4adc-b18e-29bddd62c26e",
+      "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/05060311-bfce-4b12-874d-71fd4ce63aea",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/f7983581-d107-4a1f-b5f7-f3650e777c04",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/751b09bb-72f0-45ef-8e87-666dea68219f",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/7022285b-9621-42e9-ad4d-4e02c115ef18",
+      "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-oleds/142e0420-2f74-4ed9-829b-0b3d5a684d01",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/0fa864c2-4660-402f-b726-3e9895748a49",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/908cede7-b294-471a-afe8-add61f2078e7",
+      "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/691c20a1-915b-4403-9813-1f0c96ed6f8b"
+    ],
+    "filename_boundary": {
+      "source": "https://apache.googlesource.com/poi/+/0614835c55f44ab6f3e9b0850ca51e0e53a65a49/poi/src/main/java/org/apache/poi/poifs/filesystem/Ole10Native.java",
+      "supported": "CompObj Package/Package2 display type plus bounded structured Ole10Native header; ASCII filename with existing suffix. UTF-16 CompObj display type supported.",
+      "fallback": "Unknown ANSI code page, unsupported native form, missing/truncated optional metadata -> type or generic placeholder. No payload parser or recursive attachment extraction; prefix reads capped at4096 bytes.",
+      "caveat": "MS-OLEDS defines NativeData as application-defined, so the Package filename header is corroborated by Apache POI, not claimed to be a universal Microsoft filename schema."
+    },
+    "ablation": {
+      "baseline": {
+        "Bug47731.doc": {
+          "status": "returned",
+          "chars": 148,
+          "placeholders": 4,
+          "preview": "[嵌入文件：Microsoft Office Word Document][嵌入文件：Microsoft Office Word Document][嵌入文件：Microsoft Office Word Document][嵌入文件：Microsoft Off"
+        },
+        "53446.doc": {
+          "status": "returned",
+          "chars": 16864,
+          "placeholders": 0,
+          "preview": "DRAFT\n\nProposal\nto\nLakeland Electric\nby\nEnron North America Corp.\n(Revised September 1728, 1999)\n\n\n\nBuyer:\tLakeland Electric (“Lak"
+        },
+        "Bug33519.doc": {
+          "status": "returned",
+          "chars": 4334,
+          "placeholders": 0,
+          "preview": "РУСЕНСКИ КЛУБ ЗА ПЪТЕШЕСТВИЯ БЯЛА ЗВЕЗДА\n0887 621 994; e-mail: biala_zvezda@abv.bg\nЯвор Асенов\n\nПЪТЕШЕСТВИЯ -  2005\n\nПриятели, пре"
+        },
+        "word_with_embeded.doc": {
+          "status": "returned",
+          "chars": 227,
+          "placeholders": 4,
+          "preview": "I have lots of embedded files in me\n[嵌入文件：Microsoft Office Excel 2003 Worksheet]\n[嵌入文件：Microsoft Office Excel 2003 Worksheet]\n[嵌入文"
+        }
+      },
+      "restore_global_name_lookup": {
+        "status": "rejected",
+        "error": "Invalid Word CLX: unexpected record type 0x00"
+      },
+      "restore_64bit_length_for_v3": {
+        "status": "rejected",
+        "error": "OLE root storage exceeds parser file-size limit"
+      },
+      "restore_wrong_tab_widths": {
+        "status": "rejected",
+        "error": "Legacy .doc PChgTabs operand has too many additions"
+      },
+      "remove_body_placeholder_projection": {
+        "status": "returned",
+        "chars": 124,
+        "placeholders": 0,
+        "preview": "I have lots of embedded files in me\nEMBED Excel.Sheet.8\nEMBED Excel.Sheet.8\nEMBED PowerPoint.Show.8\nEMBED Word.Document.8 \\s"
+      }
+    },
+    "real_document_assertions": {
+      "word_with_embeded.doc": "Full exact main text and four ordered type placeholders, no warnings.",
+      "Bug47731.doc": "Four placeholders; stream-read guard proves embedded WordDocument/0Table/1Table/Data are not opened; rice payload is excluded.",
+      "53379.doc": "Main body beginning/end and object placeholder; not full exact oracle.",
+      "Bug50936_3.doc": "Main body beginning/end, no leaked EMBED instruction; not full exact oracle.",
+      "53446.doc": "Known main body beginning/section/end.",
+      "Bug33519.doc": "Known Bulgarian main body beginning/sections/end.",
+      "Bug61268.doc": "Root stream selection succeeds but independent missing OfficeArtClientTextbox still rejects."
+    },
+    "corpus": {
+      "outcomes": {
+        "extracted": 156,
+        "unsupported-word-version": 23,
+        "rejected-needs-review": 16,
+        "unsupported-encryption": 3,
+        "unsupported-feature": 1,
+        "unsupported-container": 1
+      },
+      "changed_outcomes": [
+        {
+          "file": "corpus/apache-poi/53379.doc",
+          "before": "rejected-needs-review",
+          "after": "extracted",
+          "error": null
+        },
+        {
+          "file": "corpus/apache-poi/53446.doc",
+          "before": "resource-limit",
+          "after": "extracted",
+          "error": null
+        },
+        {
+          "file": "corpus/apache-poi/Bug33519.doc",
+          "before": "rejected-needs-review",
+          "after": "extracted",
+          "error": null
+        },
+        {
+          "file": "corpus/apache-poi/Bug47731.doc",
+          "before": "rejected-needs-review",
+          "after": "extracted",
+          "error": null
+        },
+        {
+          "file": "corpus/apache-poi/Bug50936_1.doc",
+          "before": "resource-limit",
+          "after": "rejected-needs-review",
+          "error": "Body textbox shape is missing OfficeArtClientTextbox"
+        },
+        {
+          "file": "corpus/apache-poi/Bug50936_3.doc",
+          "before": "rejected-needs-review",
+          "after": "extracted",
+          "error": null
+        },
+        {
+          "file": "corpus/apache-poi/Bug50955.doc",
+          "before": "resource-limit",
+          "after": "unsupported-word-version",
+          "error": "Unsupported Word 6/95 FIB (wIdent 0xA5DC)"
+        },
+        {
+          "file": "corpus/apache-poi/Bug51944.doc",
+          "before": "resource-limit",
+          "after": "rejected-needs-review",
+          "error": "Invalid Word FIB wIdent (expected 0xA5EC)"
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5074346559012864.doc",
+          "before": "resource-limit",
+          "after": "rejected-needs-review",
+          "error": "OLE directory tree references an invalid entry"
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5440721166139392.doc",
+          "before": "unsupported-word-version",
+          "after": "rejected-needs-review",
+          "error": "OLE directory tree references an invalid entry"
+        },
+        {
+          "file": "corpus/apache-poi/word_with_embeded.doc",
+          "before": "rejected-needs-review",
+          "after": "extracted",
+          "error": null
+        }
+      ],
+      "previously_extracted_unchanged_text_hashes": 145,
+      "intentional_placeholder_output_changes": [
+        "corpus/apache-poi/Bug47958.doc",
+        "corpus/apache-poi/FloatingPictures.doc",
+        "corpus/apache-poi/Fuzzed.doc",
+        "corpus/apache-poi/equation.doc",
+        "corpus/apache-poi/word_with_embeded_ooxml.doc"
+      ],
+      "previously_extracted_new_failures": 0,
+      "runner_exit_code": 1,
+      "exit_reason": "16 rejections still require review; extracted is not a full-text correctness guarantee.",
+      "disabling_placeholders_restores_all_five_prior_text_hashes": {
+        "corpus/apache-poi/Bug47958.doc": true,
+        "corpus/apache-poi/FloatingPictures.doc": true,
+        "corpus/apache-poi/Fuzzed.doc": true,
+        "corpus/apache-poi/equation.doc": true,
+        "corpus/apache-poi/word_with_embeded_ooxml.doc": true
+      }
+    },
+    "source_sha256": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "5f51dc149e0613af790f3a90e7daefe2f42072f78091defd1ac44b24bf5c638f",
+      "src/legacy_doc/_characters.py": "e343a4920be68adb0477c1d65627838484dbda7a54038eb0e18064ae1d92db93",
+      "src/legacy_doc/_object_metadata.py": "d3ece726b2f62ea564a3acf2a3fce59897c48510153b787a6ef2d89039c2a500",
+      "src/legacy_doc/_objects.py": "e8e96e2987b28377fdc0a69302a5b26556d1679d3784ee3c2b2e1081651cbfc4",
+      "src/legacy_doc/_paragraphs.py": "f2b53737a8ccc30a41650d4e47cd1a24f6de7c3a7804a5272544012cdfac0490",
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "src/legacy_doc/_text.py": "9b38ba12280fc4e7514280421d95cfda34664a3632c2130cca3864b5bb2bba2f",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "19a982b26241ed277bbdb56db11d33da1d70b81bfa7ea3125324ad3a218085a6",
+      "src/legacy_doc/properties.py": "2860d440a1dbda1890ecd82bbf6d5328c76c633342c848f432b32470bfb8349d",
+      "src/legacy_doc/types.py": "ed5b835ba95b968e8a6379026f3619f8ff9123c0edfd28193da5e9875f71a87a",
+      "src/legacy_doc/word.py": "2909210072dc0b45191c8a56b044812f080acfc074928320b9c8642a4aa84a0c"
+    }
+  },
+  "remaining_16_audit": {
+    "date": "2026-09-15",
+    "scope": "Read-only compatibility triage of the 16 remaining corpus rejections; no parser changes. Dispositions are recommendations, not new acceptance tests.",
+    "execution_status_note": "The corpus runner still reports 16 rejected-needs-review. This audit is separate from execution status.",
+    "raw_evidence": {
+      "rejections": [
+        {
+          "file": "corpus/apache-poi/Bug48075.doc",
+          "sha256": "a2cebaba40b42f5f1bf6164c5b2506798d435af132a6bac926c53fa1b0359056",
+          "classification": "confirmed",
+          "error": "Legacy .doc paragraph mark is outside PlcBtePapx",
+          "frames": [
+            {
+              "function": "iter_paragraphs",
+              "values": {
+                "start": 0,
+                "end": 2377,
+                "limit": 2377
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/Bug50936_1.doc",
+          "sha256": "9169e7a5f5aa865579ceb803bd91bd840134e9292c8a56e81c35913b47e218c7",
+          "classification": "confirmed",
+          "error": "Body textbox shape is missing OfficeArtClientTextbox",
+          "frames": []
+        },
+        {
+          "file": "corpus/apache-poi/Bug51944.doc",
+          "sha256": "9e9ba722afe708c936f20252525fea0817f6b1026c008ea9786a242f69a7ca19",
+          "classification": "confirmed",
+          "error": "Invalid Word FIB wIdent (expected 0xA5EC)",
+          "frames": []
+        },
+        {
+          "file": "corpus/apache-poi/Bug53380_1.doc",
+          "sha256": "d7673aa3afa6ace77b4fed0a77d3437b53623bd56275d97c54c03a0f08653db1",
+          "classification": "confirmed",
+          "error": "Body textbox shape is missing OfficeArtClientTextbox",
+          "frames": []
+        },
+        {
+          "file": "corpus/apache-poi/Bug61268.doc",
+          "sha256": "24b47ad892871c80495c64b440c24200dbcaa16c367faf780aec43e3bf8ddae6",
+          "classification": "confirmed",
+          "error": "Body textbox shape is missing OfficeArtClientTextbox",
+          "frames": []
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-POIHWPFFuzzer-5696094627495936.doc",
+          "sha256": "c5e44bbaf25d7553e3a352273c16be662b7e9eeee39f426c618472b750db4f79",
+          "classification": "uncertain",
+          "error": "Invalid OLE directory entry name length",
+          "frames": [
+            {
+              "function": "_read_directory",
+              "values": {
+                "directory_id": 5,
+                "offset": 640,
+                "name_len": 45089,
+                "object_type": 208,
+                "raw_directory_header": "21b0d00222b0d0022390d0022490d002"
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4892412469968896.doc",
+          "sha256": "67c10a91a1d8517c9a00c95c5c8ba14df365d2ed9346de4b849370fe468bc49b",
+          "classification": "uncertain",
+          "error": "Plcfld marker does not match selected text",
+          "frames": [
+            {
+              "function": "selected",
+              "values": {
+                "start": 0,
+                "end": 8597,
+                "i": 6,
+                "cp": 5015,
+                "expected_marker": 19,
+                "actual": "'Y'"
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4947285593948160.doc",
+          "sha256": "142e28fc030f0d7f251930c916267e611a729ca384be0454b2bb6e1cc523865e",
+          "classification": "confirmed",
+          "error": "Legacy .doc PAPX FKP FC boundaries are not strictly ordered",
+          "frames": [
+            {
+              "function": "iter_paragraphs",
+              "values": {
+                "start": 0,
+                "end": 1,
+                "limit": 15
+              }
+            },
+            {
+              "function": "_load_page",
+              "values": {
+                "page_offset": 3072
+              }
+            },
+            {
+              "function": "_parse_fkp",
+              "values": {
+                "page_offset": 3072
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4951943183990784.doc",
+          "sha256": "a4baffc3fa9972ebb97d86d6e421d35de269af9861c88f4a8c1ce28a84d52966",
+          "classification": "uncertain",
+          "error": "Legacy .doc PAPX extended length is invalid",
+          "frames": [
+            {
+              "function": "iter_paragraphs",
+              "values": {
+                "start": 0,
+                "end": 7394,
+                "limit": 7443
+              }
+            },
+            {
+              "function": "_load_page",
+              "values": {
+                "page_offset": 15872
+              }
+            },
+            {
+              "function": "_parse_fkp",
+              "values": {
+                "page_offset": 15872
+              }
+            },
+            {
+              "function": "_parse_papx_in_fkp",
+              "values": {
+                "offset": 296,
+                "limit": 511,
+                "cb": 0,
+                "cb_prime": 0,
+                "page_bytes_at_offset": "000000000000062d0a000000"
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5050208641482752.doc",
+          "sha256": "6a565cf7167e942d09d29c60115b372a652d4e8c0047d28fcf65e0c680d8443c",
+          "classification": "confirmed",
+          "error": "OLE sector index is outside the file",
+          "frames": [
+            {
+              "function": "_read_regular_stream",
+              "values": {
+                "size": 128,
+                "sector": 109
+              }
+            },
+            {
+              "function": "_sector",
+              "values": {
+                "sector": 109,
+                "start": 56320,
+                "end": 56832
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5074346559012864.doc",
+          "sha256": "b1952b23c38cd9793cb67a464f243c633c9370eb550b963abc84184d63b8382b",
+          "classification": "uncertain",
+          "error": "OLE directory tree references an invalid entry",
+          "frames": [
+            {
+              "function": "_find_direct_child",
+              "values": {
+                "object_type": 2
+              }
+            },
+            {
+              "function": "_iter_sibling_tree",
+              "values": {
+                "root_id": 1,
+                "current": 6,
+                "available_ids": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5195207308541952.doc",
+          "sha256": "f125b24c52722b5581d7b4efbd814dbb2229031a05c83af77af363ed151fdf4d",
+          "classification": "uncertain",
+          "error": "Invalid OLE directory entry name length",
+          "frames": [
+            {
+              "function": "_read_directory",
+              "values": {
+                "directory_id": 7,
+                "offset": 896,
+                "name_len": 27241,
+                "object_type": 122,
+                "raw_directory_header": "696a7a696e677362726965662061616e"
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5418937293340672.doc",
+          "sha256": "eae552c7244ce5a67bd86184e624cbfe718de6f5d15ef107a0d2b4b597aab758",
+          "classification": "confirmed",
+          "error": "OLE directory tree references an invalid entry",
+          "frames": [
+            {
+              "function": "_find_direct_child",
+              "values": {
+                "object_type": 2
+              }
+            },
+            {
+              "function": "_iter_sibling_tree",
+              "values": {
+                "root_id": 1,
+                "current": 2,
+                "available_ids": [
+                  0,
+                  1,
+                  3,
+                  4,
+                  5,
+                  6
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5440721166139392.doc",
+          "sha256": "fb16173735b0afafc2b1b6e64a65148aaa90a1be205f0e8d60d907c39d98ddce",
+          "classification": "confirmed",
+          "error": "OLE directory tree references an invalid entry",
+          "frames": [
+            {
+              "function": "_find_direct_child",
+              "values": {
+                "object_type": 2
+              }
+            },
+            {
+              "function": "_iter_sibling_tree",
+              "values": {
+                "root_id": 1,
+                "current": 4294935010,
+                "available_ids": [
+                  0,
+                  1,
+                  2,
+                  3,
+                  4,
+                  5,
+                  6,
+                  7
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "file": "corpus/apache-poi/o_kurs.doc",
+          "sha256": "fd87d25008e5daad8ede2e17976250b1f2dd519102f32135af0a29cbf0789685",
+          "classification": "confirmed",
+          "error": "DOC table ended before a cell or row terminator",
+          "frames": []
+        },
+        {
+          "file": "corpus/apache-poi/test.doc",
+          "sha256": "fcaa1af5e3e90a7a09d4106d2aedc7fea397dec554f2cdb1238891607a2ef21f",
+          "classification": "confirmed",
+          "error": "Legacy .doc grpprl has an orphaned SPRM byte",
+          "frames": [
+            {
+              "function": "iter_paragraphs",
+              "values": {
+                "start": 0,
+                "end": 495,
+                "limit": 495
+              }
+            }
+          ]
+        }
+      ],
+      "Bug51944": {
+        "first32": "99a668005fe0090400002410650000000000000000000000000300003e1e0000",
+        "wIdent": "0xa699",
+        "nFib": "0x68",
+        "word_stream_size": 14802
+      },
+      "o_kurs": {
+        "body_cell_mark_count": 0,
+        "paragraphs": 96,
+        "rendered_table_paragraphs": 29,
+        "examples": [
+          {
+            "start": 5026,
+            "end": 5028,
+            "PAPX": [
+              [
+                "0x2416",
+                "01"
+              ],
+              [
+                "0x6649",
+                "01000000"
+              ]
+            ],
+            "PRM": [
+              [
+                "0x664a",
+                "ffffffff"
+              ]
+            ],
+            "effective_depth": 0,
+            "effective_in_table": true,
+            "rendered_depth": 1
+          },
+          {
+            "start": 5028,
+            "end": 5098,
+            "PAPX": [
+              [
+                "0x2416",
+                "01"
+              ],
+              [
+                "0x6649",
+                "01000000"
+              ]
+            ],
+            "PRM": [
+              [
+                "0x664a",
+                "ffffffff"
+              ]
+            ],
+            "effective_depth": 0,
+            "effective_in_table": true,
+            "rendered_depth": 1
+          }
+        ]
+      },
+      "5074346559012864_directory": {
+        "directory_stream_bytes": 1024,
+        "entry6_name_length": 14336,
+        "entry6_object_type": 0,
+        "entry6_hex": "00050044006f00630075006d0065006e007400530075006d006d0061007200790049006e0066006f0072006d006100740069006f006e000000000000000000000038000200ffffffffffffffffffffffff0000000000000000000000000000000000000000000000000000000000000000000000006600000074000000000000"
+      }
+    },
+    "dispositions": [
+      {
+        "file": "corpus/apache-poi/Bug48075.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Actual paragraph mark FC 2074, but selected FKP starts at FC 4096; prior detailed audit verified uncompressed text addressing and systematic BTE/FKP mismatch."
+      },
+      {
+        "file": "corpus/apache-poi/Bug50936_1.doc",
+        "audit_disposition": "retain-missing-association-rejection",
+        "evidence": "Raw shape 1151 at body CP 14624 has matching ClientAnchor and FTXBXS, but neither F00D nor FOPT lTxid. Retain rejection under current strict association policy; not proof of intentional corruption."
+      },
+      {
+        "file": "corpus/apache-poi/Bug51944.doc",
+        "audit_disposition": "outside-supported-version",
+        "evidence": "Root WordDocument wIdent=0xA699, nFib=0x0068; upstream explicitly uses HWPFOldDocument and Word6Extractor. Generic Invalid FIB error could be classified more accurately later."
+      },
+      {
+        "file": "corpus/apache-poi/Bug53380_1.doc",
+        "audit_disposition": "retain-missing-association-rejection",
+        "evidence": "Raw shape 1027 at body CP 3 has matching ClientAnchor and FTXBXS, but neither F00D nor FOPT lTxid. Retain rejection under current strict association policy; not proof of intentional corruption."
+      },
+      {
+        "file": "corpus/apache-poi/Bug61268.doc",
+        "audit_disposition": "retain-missing-association-rejection",
+        "evidence": "Raw shape 4280 at body CP 46080 has matching ClientAnchor and FTXBXS, but neither F00D nor FOPT lTxid. Retain rejection under current strict association policy; not proof of intentional corruption."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-POIHWPFFuzzer-5696094627495936.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Directory entry 5 declares name length 45089 and object type 208."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4892412469968896.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Plcfld expects field-begin 0x13 at CP 5015; actual selected text is Y."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4947285593948160.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "PAPX FKP FC boundaries are not strictly ordered; pinned POI converter suite lists it under Corrupt files."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-4951943183990784.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "PAPX extended length has cb=0 and cbPrime=0 at page offset 15872, record offset 296; cannot contain required istd."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5050208641482752.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Sector 109 points outside the physical file; pinned POI converter suite lists it under Corrupt files."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5074346559012864.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Directory tree refers to entry 6, whose raw object type is 0 (unallocated)."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5195207308541952.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Directory entry 7 declares name length 27241 and object type 122."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5418937293340672.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Directory tree refers to an unavailable entry 2; pinned POI converter suite lists it under Corrupt files."
+      },
+      {
+        "file": "corpus/apache-poi/clusterfuzz-testcase-minimized-POIHWPFFuzzer-5440721166139392.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Directory tree refers to entry 4294935010 with only IDs 0..7 available; pinned POI converter suite lists it under Corrupt files."
+      },
+      {
+        "file": "corpus/apache-poi/o_kurs.doc",
+        "audit_disposition": "needs-semantic-review",
+        "evidence": "PAPX PItap=1 followed by PRM PDtap=-1 gives depth 0 with PFInTable=1; current paragraph builder coerces depth back to 1. No 0x07 in body. Cannot exclude as malformed before resolving attribute precedence."
+      },
+      {
+        "file": "corpus/apache-poi/test.doc",
+        "audit_disposition": "retain-structural-rejection",
+        "evidence": "Complete SPRM 31 24 00 followed by orphan 00 in PAPX; prior detailed audit found no normative padding exception."
+      }
+    ],
+    "summary": {
+      "retain_structural_rejection": 11,
+      "retain_missing_association_rejection": 3,
+      "outside_supported_version": 1,
+      "needs_semantic_review": 1
+    },
+    "upstream_classification_note": "raw_evidence.rejections[].classification is the existing upstream classification confidence, not the new local disposition.",
+    "textbox_raw_audit": {
+      "Bug50936_1.doc": {
+        "shape_id": 1151,
+        "body_cp": 14624,
+        "spa_index": 0,
+        "ftxbxs_index": 11,
+        "textbox_cp_range": [
+          275,
+          300
+        ],
+        "client_anchor_index": 0,
+        "target_f00d_present": false,
+        "target_fopt_ltxid_present": false,
+        "body_shape_count": 20,
+        "body_f00d_count": 0,
+        "body_fopt_ltxid_count": 0
+      },
+      "Bug61268.doc": {
+        "shape_id": 4280,
+        "body_cp": 46080,
+        "spa_index": 1,
+        "ftxbxs_index": 66,
+        "textbox_cp_range": [
+          215,
+          246
+        ],
+        "client_anchor_index": 1,
+        "target_f00d_present": false,
+        "target_fopt_ltxid_present": false,
+        "body_shape_count": 1536,
+        "body_f00d_count": 481,
+        "body_fopt_ltxid_count": 481
+      },
+      "Bug53380_1.doc": {
+        "shape_id": 1027,
+        "body_cp": 3,
+        "spa_index": 0,
+        "ftxbxs_index": 0,
+        "textbox_cp_range": [
+          0,
+          26
+        ],
+        "client_anchor_index": 0,
+        "target_f00d_present": false,
+        "target_fopt_ltxid_present": false,
+        "body_shape_count": 3,
+        "body_f00d_count": 0,
+        "body_fopt_ltxid_count": 0
+      }
+    },
+    "textbox_limitation": "Retain rejection under current strict association policy. This bounded audit does not prove intentional corruption or exhaust older/alternative representations; implementing FOPT alone cannot recover these targets."
+  },
+  "whole_project_ablation_audit": {
+    "date": "2026-09-15",
+    "scope": "Whole-project ablation audit; source and tests unchanged; experiments used in-memory monkeypatches only.",
+    "baseline_pytest": {
+      "passed": 222,
+      "seconds": 0.34
+    },
+    "wrapper_removal": {
+      "target": "legacy_doc.word.extract_word_text",
+      "repo_consumers": 0,
+      "passed": 222,
+      "limitation": "No statement about external direct-module imports."
+    },
+    "binary_conversion_removal": {
+      "target": "BinaryDocument.__init__ two post-_read_stream bytes checks",
+      "passed": 222,
+      "reason": "_read_stream returns bytes or raises; Data slice contains a third equivalent check."
+    },
+    "selected_metadata_decoding": {
+      "mode": "selected-metadata",
+      "cases": 200,
+      "unchanged": 200,
+      "changes": []
+    },
+    "corpus_resource_category": {
+      "status": "rejected-needs-review",
+      "error": ".doc file exceeds parser file-size limit",
+      "seconds": 0.0
+    },
+    "wheel": {
+      "bytes": 51926,
+      "python_modules": 15,
+      "runtime_dependencies": [],
+      "source_mismatches": [],
+      "smoke_text": "Just  a “test”",
+      "version": "0.1.0"
+    },
+    "version_sync": "0.1.0 matches",
+    "source_sha256": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "5f51dc149e0613af790f3a90e7daefe2f42072f78091defd1ac44b24bf5c638f",
+      "src/legacy_doc/_characters.py": "e343a4920be68adb0477c1d65627838484dbda7a54038eb0e18064ae1d92db93",
+      "src/legacy_doc/_object_metadata.py": "d3ece726b2f62ea564a3acf2a3fce59897c48510153b787a6ef2d89039c2a500",
+      "src/legacy_doc/_objects.py": "e8e96e2987b28377fdc0a69302a5b26556d1679d3784ee3c2b2e1081651cbfc4",
+      "src/legacy_doc/_paragraphs.py": "f2b53737a8ccc30a41650d4e47cd1a24f6de7c3a7804a5272544012cdfac0490",
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "src/legacy_doc/_text.py": "9b38ba12280fc4e7514280421d95cfda34664a3632c2130cca3864b5bb2bba2f",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "19a982b26241ed277bbdb56db11d33da1d70b81bfa7ea3125324ad3a218085a6",
+      "src/legacy_doc/properties.py": "2860d440a1dbda1890ecd82bbf6d5328c76c633342c848f432b32470bfb8349d",
+      "src/legacy_doc/types.py": "ed5b835ba95b968e8a6379026f3619f8ff9123c0edfd28193da5e9875f71a87a",
+      "src/legacy_doc/word.py": "2909210072dc0b45191c8a56b044812f080acfc074928320b9c8642a4aa84a0c"
+    },
+    "audit_findings": [
+      {
+        "id": "A1",
+        "kind": "removal-candidate",
+        "source": "src/legacy_doc/word.py:42",
+        "summary": "Unused extract_word_text wrapper; no repository consumers.",
+        "tradeoff": "External direct-module imports are outside the checked scope."
+      },
+      {
+        "id": "A2",
+        "kind": "removal-candidate",
+        "source": "src/legacy_doc/_binary.py:167",
+        "summary": "Post-_read_stream bytes checks cannot be reached because the helper converts to bytes or raises.",
+        "other_locations": [
+          "src/legacy_doc/_binary.py:174",
+          "src/legacy_doc/_binary.py:319"
+        ]
+      },
+      {
+        "id": "A3",
+        "kind": "simplification-candidate",
+        "source": "src/legacy_doc/properties.py:110",
+        "summary": "Decode only exposed metadata properties plus the codepage; keep directory bounds checks.",
+        "tradeoff": "Malformed unexposed values would no longer erase selected metadata or emit the same warning; current corpus outputs all unchanged."
+      },
+      {
+        "id": "A4",
+        "kind": "tooling-defect",
+        "source": "scripts/check_corpus.py:34",
+        "summary": "File-size, input-work and traversal-work resource errors do not match the resource-limit phrase.",
+        "verified_example": {
+          "status": "rejected-needs-review",
+          "error": ".doc file exceeds parser file-size limit",
+          "seconds": 0.0
+        }
+      }
+    ],
+    "cfb_review": {
+      "probes": {
+        "missing_word_name_nul": {
+          "text": "Readable"
+        },
+        "same_name_storage_and_stream": {
+          "text": "Readable"
+        }
+      },
+      "confirmed_gaps": [
+        "Declared directory-name terminator is not checked before dropping its final two bytes.",
+        "Matching names of different object types are filtered before ambiguity detection."
+      ],
+      "severity": "Low-priority strictness gaps on constructed malformed inputs; these probes retained correct body text and do not demonstrate valid-input extraction loss.",
+      "suggestion": "Consider checks on names actually used for stream/storage lookup; do not expand into a full CFB validator. Name equivalence must follow MS-CFB, not assume Python casefold is universally equivalent.",
+      "unaccepted_suggestion": "Blanket zero-size-stream start-sector rejection was not accepted as a confirmed defect; the cited directory section did not establish the proposed sentinel rule and zero bytes need no payload traversal.",
+      "sources": [
+        "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/60fe8611-66c3-496b-b70d-a504c94c9ace",
+        "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-cfb/d30e462c-5f8a-435b-9c4c-cc0b9ea89956"
+      ]
+    },
+    "selected_structure_probes": {
+      "body_cp_limit": 3,
+      "selected_textboxes": {
+        "3": {
+          "start": 3,
+          "end": 8
+        }
+      },
+      "selected_box_text": "框内文字\r",
+      "returned_text": "前后",
+      "warnings": [],
+      "orphan_cell_mark_result": "A\nB"
+    },
+    "core_review": {
+      "selected_anchor_unconsumed": {
+        "priority": "fix before strict-contract signoff",
+        "source": [
+          "src/legacy_doc/_shapes.py:476",
+          "src/legacy_doc/_text.py:89"
+        ],
+        "reproduced_public_api": true,
+        "limitation": "Constructed input; no real corpus sample established."
+      },
+      "orphan_cell_mark": {
+        "source": "src/legacy_doc/_paragraphs.py:903",
+        "input": "A\u0007B\r",
+        "output": "A\nB",
+        "suggestion": "Reject selected cell marks without effective table membership unless a supported representation is proved."
+      },
+      "unused_piece_flag": {
+        "source": [
+          "src/legacy_doc/_binary.py:79",
+          "src/legacy_doc/_binary.py:603"
+        ],
+        "field": "f_no_para_last",
+        "basis": "Static absence of consumers; no runtime deletion test performed."
+      },
+      "unused_vertical_state": {
+        "source": "src/legacy_doc/_paragraphs.py:41",
+        "field": "vertical_merge",
+        "basis": "Parsed/propagated but not consumed by renderer; current saved-physical-cell text policy does not require visual vertical expansion.",
+        "constraint": "Development plan currently prescribes processing it. Do not silently remove or invent extra rendering/validation merely to justify the state."
+      },
+      "rejected_review_finding": {
+        "claim": "Fewer TC80 records than columns must fail.",
+        "reason": "Microsoft explicitly permits default formatting for missing records and ignoring surplus records.",
+        "source": "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/de06ec41-a0ac-4046-9096-cdfaa0091ad9"
+      },
+      "sources": [
+        "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/e98fe93c-d57f-4d9b-a519-30e6acbdd414",
+        "https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-doc/5b45f0e7-7760-4fdb-af88-0146de2feb4c"
+      ]
+    }
+  },
+  "ablation_cleanup_validation": {
+    "date": "2026-09-15",
+    "scope": "User-authorized cleanup of audit section 2. Failure-boundary fixes and corpus-classification fixes remain proposals only.",
+    "removed": [
+      "word.extract_word_text",
+      "Piece.f_no_para_last",
+      "Three redundant post-_read_stream bytes checks",
+      "CellFormat.vertical_merge and value propagation",
+      "Decoding of unreturned metadata values and the all-properties intermediate dictionary"
+    ],
+    "retained": [
+      "TVertMerge record length/value/cell-index validation",
+      "Property-index bounds and codepage-first decoding",
+      "Known metadata failures emit warnings",
+      "Physical vertical-continuation cells and their saved text"
+    ],
+    "pytest": {
+      "passed": 225,
+      "seconds": 0.56
+    },
+    "ruff_F": "passed",
+    "version_sync": "0.1.0",
+    "diff_check": "passed",
+    "corpus": {
+      "files": 200,
+      "outcomes": {
+        "extracted": 156,
+        "unsupported-word-version": 23,
+        "rejected-needs-review": 16,
+        "unsupported-encryption": 3,
+        "unsupported-feature": 1,
+        "unsupported-container": 1
+      },
+      "runner_exit_code": 1,
+      "runner_reason": "16 original rejected-needs-review statuses are unchanged; classification changes were not authorized in this cleanup.",
+      "full_results_equal": 200,
+      "comparison_fields": [
+        "text_sha256",
+        "chars",
+        "metadata",
+        "warnings",
+        "parser",
+        "version",
+        "exception_type",
+        "exception_message"
+      ],
+      "baseline": "Previous audit wheel verified against then-current source",
+      "changed_files": []
+    },
+    "wheel": {
+      "bytes": 51783,
+      "source_mismatches": []
+    },
+    "intentional_behavior_change": "Malformed value bytes of unreturned metadata properties are no longer decoded. Their index bounds are still checked, and selected metadata fields retain warnings.",
+    "source_sha256": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "fffd7a9837dfaa4762a29899e9d0fb9e1331a38d0cfe3390ae71bcc53ac2c447",
+      "src/legacy_doc/_characters.py": "e343a4920be68adb0477c1d65627838484dbda7a54038eb0e18064ae1d92db93",
+      "src/legacy_doc/_object_metadata.py": "d3ece726b2f62ea564a3acf2a3fce59897c48510153b787a6ef2d89039c2a500",
+      "src/legacy_doc/_objects.py": "e8e96e2987b28377fdc0a69302a5b26556d1679d3784ee3c2b2e1081651cbfc4",
+      "src/legacy_doc/_paragraphs.py": "239631bce678e9178515c69cdb7e9e3edda87af17e10c1507c587ff8512a5044",
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "src/legacy_doc/_text.py": "9b38ba12280fc4e7514280421d95cfda34664a3632c2130cca3864b5bb2bba2f",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "19a982b26241ed277bbdb56db11d33da1d70b81bfa7ea3125324ad3a218085a6",
+      "src/legacy_doc/properties.py": "239e3a4526a2ddf9a4a9d0a70c110ec7a9807260e543ccb98c3b8ebc3041eea6",
+      "src/legacy_doc/types.py": "ed5b835ba95b968e8a6379026f3619f8ff9123c0edfd28193da5e9875f71a87a",
+      "src/legacy_doc/word.py": "01f2874ab4e8be9546f99a656966f086a093335cda8e743adfa6c55d187cdd97"
+    }
+  },
+  "minimal_guard_validation": {
+    "date": "2026-09-15",
+    "scope": "Three authorized minimal fixes: prevalidate selected textbox anchors, reject orphan cell marks after effective paragraph properties, classify explicit parser resource limits in corpus runner. All thresholds unchanged.",
+    "red_before_parser_fix": {
+      "failed": 3,
+      "passed": 32
+    },
+    "focused_after_parser_fix": {
+      "passed": 75
+    },
+    "pytest": {
+      "passed": 277,
+      "seconds": 0.65
+    },
+    "ruff_F": "passed",
+    "diff_check": "passed",
+    "corpus": {
+      "files": 200,
+      "outcomes": {
+        "extracted": 156,
+        "unsupported-word-version": 23,
+        "rejected-needs-review": 16,
+        "unsupported-encryption": 3,
+        "unsupported-feature": 1,
+        "unsupported-container": 1
+      },
+      "runner_exit_code": 1,
+      "runner_reason": "The 16 original rejected-needs-review statuses remain; no new rejection or unexpected error.",
+      "full_results_equal": 200,
+      "changed_files": [],
+      "report_equal_ignoring_seconds": true
+    },
+    "resource_reporting": {
+      "real_trigger": "25 MiB + 1 byte OLE-prefixed input, actual extract_text LegacyDocError mapped to resource-limit",
+      "other_classification_tests": "Injected actual capacity messages; CP/FC bounds, malformed format cardinalities and cycles stay rejected-needs-review.",
+      "limits_unchanged": true,
+      "library_timeout": null,
+      "corpus_timeout_seconds": 5
+    },
+    "wheel": {
+      "bytes": 51975,
+      "source_mismatches": []
+    },
+    "source_sha256": {
+      "src/legacy_doc/__init__.py": "cd6daca46f4678d8f99237ec42512146e6d5164c226f8117018b434f4abe591d",
+      "src/legacy_doc/_binary.py": "fffd7a9837dfaa4762a29899e9d0fb9e1331a38d0cfe3390ae71bcc53ac2c447",
+      "src/legacy_doc/_characters.py": "e343a4920be68adb0477c1d65627838484dbda7a54038eb0e18064ae1d92db93",
+      "src/legacy_doc/_object_metadata.py": "d3ece726b2f62ea564a3acf2a3fce59897c48510153b787a6ef2d89039c2a500",
+      "src/legacy_doc/_objects.py": "e8e96e2987b28377fdc0a69302a5b26556d1679d3784ee3c2b2e1081651cbfc4",
+      "src/legacy_doc/_paragraphs.py": "fdcb3817751e99671845bf07f7c4a752b4f9994f469bba096fe9283ee33ef35a",
+      "src/legacy_doc/_shapes.py": "4b9be56d9655fc48cb4aeeb1180358d0f180f27419cc9e2544d1ca35ca998e8e",
+      "src/legacy_doc/_text.py": "7a6435fe1aa32a94feba3d50d302ce3cf13c9bd10ab02bceee0bf2994858162f",
+      "src/legacy_doc/api.py": "50bcb2c9450ff1a6b04bc168f8b1252ef44ca1d5ce9a71a5ac7015dc729f282e",
+      "src/legacy_doc/exceptions.py": "0a960fffcaad65f7304241ff3876865cbacc92b65e9ad7a652b0dc4870d5d60e",
+      "src/legacy_doc/normalize.py": "f99b5ef0fc1d97f050e76f247c69bfbe8088a9ff7ace5b144016b38158d00c9f",
+      "src/legacy_doc/ole.py": "19a982b26241ed277bbdb56db11d33da1d70b81bfa7ea3125324ad3a218085a6",
+      "src/legacy_doc/properties.py": "239e3a4526a2ddf9a4a9d0a70c110ec7a9807260e543ccb98c3b8ebc3041eea6",
+      "src/legacy_doc/types.py": "ed5b835ba95b968e8a6379026f3619f8ff9123c0edfd28193da5e9875f71a87a",
+      "src/legacy_doc/word.py": "01f2874ab4e8be9546f99a656966f086a093335cda8e743adfa6c55d187cdd97"
+    },
+    "runner_sha256": "cbeecd2190f9d688c8028f2fca3e712026682ba4a15e63eabc1ed612ff1d8141"
   }
 }

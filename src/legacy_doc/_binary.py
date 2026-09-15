@@ -76,7 +76,6 @@ class Piece:
     fc: int
     compressed: bool
     prm: int
-    f_no_para_last: bool = False
 
     @property
     def cp_length(self) -> int:
@@ -164,15 +163,11 @@ class BinaryDocument:
         self.ole = ole
 
         self.word = _read_stream(ole, "WordDocument", options)
-        if not isinstance(self.word, bytes):
-            self.word = bytes(self.word)
 
         self.fib = _parse_fib(self.word)
         # The selected stream is determined solely by fWhichTblStm.  In
         # particular, do not search the other Table stream for a candidate.
         self.table = _read_stream(ole, self.fib.table_stream_name, options)
-        if not isinstance(self.table, bytes):
-            self.table = bytes(self.table)
 
         fc_clx, lcb_clx = self.fib.pair(PAIR_FC_CLX)
         clx = _bounded_slice(
@@ -316,8 +311,6 @@ class BinaryDocument:
         end = _checked_add(offset, size, "Data range")
         if self._data is None:
             self._data = _read_stream(self.ole, "Data", self.options)
-            if not isinstance(self._data, bytes):
-                self._data = bytes(self._data)
         if end > len(self._data):
             raise LegacyDocError(
                 f"Data range [{offset}, {end}) exceeds Data stream ({len(self._data)} bytes)"
@@ -600,7 +593,6 @@ def _parse_clx(clx: bytes) -> tuple[tuple[Piece, ...], tuple[bytes, ...]]:
                     fc=fc,
                     compressed=compressed,
                     prm=prm,
-                    f_no_para_last=bool(flags & 0x0001),
                 )
             )
 

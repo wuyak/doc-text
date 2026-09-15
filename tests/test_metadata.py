@@ -48,6 +48,25 @@ def test_extracts_summary_information_metadata() -> None:
     assert result.warnings == ()
 
 
+def test_malformed_unreturned_property_does_not_block_text_or_title() -> None:
+    document = make_doc_bytes(
+        "Readable text",
+        summary_properties={2: "Quarterly Notes", 99: "Bad"},
+    )
+    malformed_value = struct.pack("<HHI", 0x001E, 0, 4) + b"Bad\x00"
+    assert document.count(malformed_value) == 1
+    document = document.replace(
+        malformed_value,
+        struct.pack("<HHI", 0x001E, 0, 0xFFFFFFFF) + b"Bad\x00",
+    )
+
+    result = extract_text(document)
+
+    assert result.text == "Readable text"
+    assert result.metadata["title"] == "Quarterly Notes"
+    assert result.warnings == ()
+
+
 def test_extracts_document_summary_information_metadata() -> None:
     document = make_doc_bytes(
         "Metadata text",

@@ -5,9 +5,11 @@ This is a logical text traversal, not a page layout or visual reading-order mode
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from bisect import bisect_right
 from typing import TYPE_CHECKING, Iterable
 
 from legacy_doc._characters import CharacterIndex
+from legacy_doc._objects import EmbeddedObjects, EmbeddedField
 from legacy_doc.exceptions import LegacyDocError
 from legacy_doc.normalize import normalize_word_text
 
@@ -41,6 +43,14 @@ class TextRenderer:
         self.doc = doc
         self.textboxes = textboxes
         self.characters = CharacterIndex(doc)
+        # Validate selected anchors before traversal, including positions that
+        # would otherwise be skipped at a story or paragraph boundary.
+        for cp in textboxes:
+            if not 0 <= cp < doc.fib.ccp_text:
+                raise LegacyDocError("Textbox anchor is outside main-document text")
+            if doc.read_text(cp, cp + 1) != "\x08" or not self.characters.is_special(cp):
+                raise LegacyDocError("Textbox anchor does not reference a drawing character")
+        self.objects = EmbeddedObjects(doc, self.characters)
         self.limit = doc.options.max_text_bytes
         self._active_textboxes: set[tuple[int, int]] = set()
         # Bound work even when repeated references produce little final output.
@@ -62,7 +72,10 @@ class TextRenderer:
             parts.append(value)
         return separator.join(parts)
 
-    def _inline(self, paragraph: Paragraph) -> _Paragraph:
+    def _inline(
+        self, paragraph: Paragraph,
+        embedded: tuple[tuple[int, ...], list[EmbeddedField]],
+    ) -> _Paragraph:
         parts: list[str] = []
         descendants: list[str] = []
         cp = paragraph.start
@@ -85,12 +98,16 @@ class TextRenderer:
                 if raw_bytes - leading_bytes - trailing_bytes > self.limit:
                     raise LegacyDocError(".doc extracted text exceeds parser limit")
             parts.append(value)
+        starts, fields = embedded
         for char in paragraph.text:
             self._charge(1)
+            index = bisect_right(starts, cp) - 1
+            embedded_field = fields[index] if index >= 0 and cp < fields[index].end else None
             textbox = self.textboxes.get(cp)
-            if textbox is not None:
-                if char != "\x08" or not self.characters.is_special(cp):
-                    raise LegacyDocError("Textbox anchor does not reference a drawing character")
+            if embedded_field is not None:
+                if cp == embedded_field.start:
+                    append(self.objects.label(embedded_field))
+            elif textbox is not None:
                 key = (textbox.start, textbox.end)
                 if key in self._active_textboxes or len(self._active_textboxes) >= 64:
                     raise LegacyDocError("Cyclic or excessive DOC textbox nesting")
@@ -150,6 +167,7 @@ class TextRenderer:
     def _read_blocks(self, start: int, end: int) -> list[_Paragraph | _Table]:
         from legacy_doc._paragraphs import iter_paragraphs
 
+        embedded = self.objects.selected(start, end)
         blocks: list[_Paragraph | _Table] = []
         frames: list[_Frame] = []
         for paragraph in iter_paragraphs(self.doc, start, end):
@@ -159,13 +177,15 @@ class TextRenderer:
                 raise LegacyDocError("DOC table nesting exceeds parser limit")
             while len(frames) > depth:
                 self._close(frames.pop())
-            if depth > len(frames) + 1:
-                raise LegacyDocError("Invalid jump in DOC table nesting")
-            if depth > len(frames):
+            # MS-DOC 2.4.3: CellN may begin with TableN+1, before any ParaN.
+            # Create each containing cell now; its actual cell/row marks must
+            # still close it below. No text or terminators are synthesized.
+            while depth > len(frames):
+                self._charge(1)
                 table = _Table()
                 (frames[-1].cell if frames else blocks).append(table)
                 frames.append(_Frame(table))
-            node = self._inline(paragraph)
+            node = self._inline(paragraph, embedded)
             if depth == 0:
                 if paragraph.row_end or paragraph.cell_end:
                     raise LegacyDocError("Table terminator outside a DOC table")

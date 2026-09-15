@@ -103,6 +103,16 @@ def test_row_definition_mismatch_is_not_silently_repaired():
         extract_text(data)
 
 
+def test_cell_mark_without_table_membership_is_not_a_plain_line_break():
+    with pytest.raises(LegacyDocError, match='cell mark.*table'):
+        extract_text(make_doc_bytes('A\x07B\r'))
+
+
+def test_unselected_story_cell_marks_do_not_affect_body():
+    data = make_doc_bytes('正文\r', stories={'hdd': 'A\x07B\r'})
+    assert extract_text(data).text == '正文'
+
+
 def test_literal_page_field_text_is_not_deleted():
     assert extract_text(make_doc_bytes('说明\rPAGE \\* MERGEFORMAT 3\r结束')).text == '说明\nPAGE \\* MERGEFORMAT 3\n结束'
 
